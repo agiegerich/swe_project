@@ -1,11 +1,39 @@
 @(message: String)
 
 @main("Welcome to Play") {
-    <form action="/registration">
-        First Name:<br>
-        <input type="text" name="firstname"><br>
-        Last Name:<br>
-        <input type="text" name="lastname">
-        <input type="submit" value="Submit"
-    </form>
+    <div>
+        <form action="/registration" method="post">
+			First name:<br>
+			<input type="text" name="first_name" value="" maxlength="100" required/>
+			<br />
+			Last name:<br> 
+			<input type="text" name="last_name" value="" maxlength="100" required/>
+			<br />
+			Email:<br>
+			<input type="email" name="email" value="" maxlength="100" required/>
+			<br />
+			Date of Birth:<br>
+			<input type="date" name="DOB" value="" max="1998-1-1" required/>
+			<br />
+			Password:<br>
+			<input type="password" name="pwd" value="" required/>
+			<br />
+			Repeat Password:
+			<input type="password" name="rptPwd" value="" required/>
+			<br />
+			Role:<br>
+			<select name="role" required>
+				<option value="user">User</option>
+				<option value="mngr">Manager</option>
+				<option value="admn">Administrator</option>
+			</select>
+			<br />
+			<div id="mngrID">
+				Manager/Admin ID:<br>
+				<input type="text" name="id" value="" maxlength="10" required/>
+				<br />
+			</div>
+			<input type="submit" value="Submit" />
+		</form>
+	</div>
 }
