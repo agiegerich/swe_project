@@ -1,35 +1,39 @@
 @(message: String)
 
 @main("Welcome to Play") {
-    <form action="/registration">
-        First Name:<br>
-        <input type="text" name="first-name"><br>
-
-        Last Name:<br>
-        <input type="text" name="last-name"><br>
-
-        E-mail:<br>
-        <input type="email" name="email"><br>
-
-        Password:<br>
-        <input type="password" name"password"><br>
-
-        Date of Birth:<br>
-        <input type="text" name="date-of-birth"><br>
-        
-        Gender<br>
-        <select>
-            <option value="male">
-            <option value="female">
-        </select>
-
-        Role<br>
-        <select>
-            <option value="user">User</option>
-            <option value="administrator">Administrator</option>
-            <option value="manager">Manager</option>
-        </select>
-
-        <input type="submit" value="submit">
-    </form>
+    <div>
+        <form action="/registration" method="post">
+			First name:<br>
+			<input type="text" name="first_name" value="" maxlength="100" required/>
+			<br />
+			Last name:<br> 
+			<input type="text" name="last_name" value="" maxlength="100" required/>
+			<br />
+			Email:<br>
+			<input type="email" name="email" value="" maxlength="100" required/>
+			<br />
+			Date of Birth:<br>
+			<input type="date" name="DOB" value="" max="1998-1-1" required/>
+			<br />
+			Password:<br>
+			<input type="password" name="pwd" value="" required/>
+			<br />
+			Repeat Password:<br>
+			<input type="password" name="rptPwd" value="" required/>
+			<br />
+			Role:<br>
+			<select name="role" required>
+				<option value="user">User</option>
+				<option value="mngr">Manager</option>
+				<option value="admn">Administrator</option>
+			</select>
+			<br />
+			<div id="mngrID">
+				Manager/Admin ID:<br>
+				<input type="text" name="id" value="" maxlength="10" required/>
+				<br />
+			</div>
+			<input type="submit" value="Submit" />
+		</form>
+	</div>
 }
