@@ -1,9 +1,19 @@
 package controllers;
 
+import java.util.UUID;
+import javax.persistence.EntityManager;
+
 import play.*;
 import play.mvc.*;
 
+import models.Test;
+
+import play.db.jpa.JPA;
+import play.db.jpa.Transactional;
+
+
 import views.html.*;
+
 
 public class Application extends Controller {
 
@@ -19,8 +29,12 @@ public class Application extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 
+    @Transactional
     public Result registerUser() {
-        return null;
+        Logger.info("Recieved registration request.");
+        EntityManager em = JPA.em();
+        Test t = new Test("albert", 13);
+        Logger.debug("Received register user request.");
+        return jsonResult(ok());
     }
-
 }
