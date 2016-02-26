@@ -4,9 +4,10 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 
 import play.*;
+import play.data.Form;
 import play.mvc.*;
 
-import models.Test;
+import models.Registration;
 
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
@@ -32,9 +33,17 @@ public class Application extends Controller {
     @Transactional
     public Result registerUser() {
         Logger.info("Recieved registration request.");
-        EntityManager em = JPA.em();
-        Test t = new Test("albert", 13);
-        Logger.debug("Received register user request.");
-        return jsonResult(ok());
+
+        Form<Registration> registrationForm = Form.form( Registration.class ).bindFromRequest();
+        if ( registrationForm.hasErrors() ) {
+            return badRequest();  
+        }
+
+        Registration registration = registrationForm.get();
+        Logger.info( registration.firstName );
+        registration.save();
+        return redirect( routes.Application.index() );
+
+
     }
 }

@@ -4,33 +4,33 @@
     <div>
         <form action="/registration" method="post">
 			First name:<br>
-			<input type="text" name="first_name" value="" maxlength="100" required/>
+			<input type="text" name="firstName" value="" maxlength="100" required/>
 			<br />
 			Last name:<br> 
-			<input type="text" name="last_name" value="" maxlength="100" required/>
+			<input type="text" name="lastName" value="" maxlength="100" required/>
 			<br />
 			Email:<br>
 			<input type="email" name="email" value="" maxlength="100" required/>
 			<br />
 			Date of Birth:<br>
-			<input type="date" name="DOB" value="" max="1998-1-1" required/>
+			<input type="date" name="dateOfBirth" value="" max="1998-1-1" required/>
 			<br />
 			Password:<br>
-			<input type="password" name="pwd" value="" required/>
+			<input type="password" name="password" value="" required/>
 			<br />
 			Repeat Password:<br>
-			<input type="password" name="rptPwd" value="" required/>
+			<input type="password" name="repeatPassword" value="" required/>
 			<br />
 			Role:<br>
 			<select name="role" required>
 				<option value="user">User</option>
-				<option value="mngr">Manager</option>
-				<option value="admn">Administrator</option>
+				<option value="manager">Manager</option>
+				<option value="admin">Administrator</option>
 			</select>
 			<br />
 			<div id="mngrID">
 				Manager/Admin ID:<br>
-				<input type="text" name="id" value="" maxlength="10" required/>
+				<input type="number" name="executiveId" value="" maxlength="10" required/>
 				<br />
 			</div>
 			<input type="submit" value="Submit" />
