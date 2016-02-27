@@ -18,8 +18,10 @@ import play.data.validation.Constraints.Required;
 public class Registration extends Model {
 
     @Id
-    @Required
-    @Column(length=32)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    public Long id;
+
+    @Column(length=36)
     public String uuid;
 
     @Required
@@ -44,6 +46,7 @@ public class Registration extends Model {
     @MaxLength(20)
     public String repeatPassword;
     
+    @Required
     public Role role;
 
     public enum Role {
