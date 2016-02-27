@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.UniqueConstraint;
 
 
 import play.db.ebean.Model;
@@ -18,8 +19,12 @@ import play.data.validation.Constraints.Required;
 public class User extends Model {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    public Long id;
+
     @Required
     @Email
+    @Column(unique=true)
     public String email;
     
     @Required
@@ -30,33 +35,31 @@ public class User extends Model {
     @MaxLength(50)
     public String lastName;
     
+    /* TODO
+     * I think Aashay said we shouldn't have a company name.
     @Required
     @MaxLength(50)
     public String companyName;
+    */
     
     @Required
+    @Column(nullable=false)
     public Gender gender;
     
-    public enum Gender{
-        Female, Male
-    }
-
     @Required
+    @Column(nullable=false)
     public Date dateOfBirth;
 
     @Required
     @MinLength(6)
     @MaxLength(20)
+    @Column(nullable=false)
     public String password;
 
     @Required
+    @Column(nullable=false)
     public Role role;
-    
-    public enum Role {
-        user, supplier, manager, administrator
-    }
 
-    public int executiveId;
     
     public static Model.Finder<String, User> find = new Finder(String.class, User.class);
     
@@ -64,7 +67,7 @@ public class User extends Model {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.companyName = companyName;
+        //this.companyName = companyName;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.password = password;

@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.persistence.EntityManager;
 
@@ -33,14 +35,22 @@ public class Application extends Controller {
         return ok(index.render());
     }
 
+    public Result badRequest(List<String> errors) {
+        return badRequest( badRequest.render(errors) );
+    }
+
     @Transactional
     public Result registerUser() {
         Logger.info("Recieved registration request.");
 
         // Validate the form.
         Form<Registration> registrationForm = Form.form( Registration.class ).bindFromRequest();
+        Map<String, String> data = registrationForm.data();
+        for ( String d : data.keySet() ) {
+            Logger.debug( d + ": "+ data.get(d) +"\n" );
+        }
         if ( registrationForm.hasErrors() ) {
-            return badRequest();  
+            return badRequest( badRequest.render( Util.getErrorList( registrationForm )) );
         }
 
         Registration registration = registrationForm.get();
