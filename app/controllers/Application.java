@@ -9,9 +9,12 @@ import play.mvc.*;
 
 import models.Registration;
 
+import play.libs.mailer.Email;
+import play.libs.mailer.MailerPlugin;
+
+
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
-
 
 import views.html.*;
 
@@ -27,23 +30,46 @@ public class Application extends Controller {
     }
 
     public Result index() { 
-        return ok(index.render("Your new application is ready."));
+        return ok(index.render());
     }
 
     @Transactional
     public Result registerUser() {
         Logger.info("Recieved registration request.");
 
+        // Validate the form.
         Form<Registration> registrationForm = Form.form( Registration.class ).bindFromRequest();
         if ( registrationForm.hasErrors() ) {
             return badRequest();  
         }
 
         Registration registration = registrationForm.get();
-        Logger.info( registration.firstName );
+        
+        // Add a UUID to the Registration so that we can verify the registration via email.
+        registration.uuid = UUID.randomUUID().toString();
+
+        // Save the Registration in the database.
         registration.save();
-        return redirect( routes.Application.index() );
 
+        // Build an email with the registration link containing the generated UUID.
+        Email email = new Email();
+        email.setSubject("Registration Confirmation");
+        email.setFrom("SGL Mailer <team10mailer@gmail.com>");
+        email.addTo( "TO <"+registration.email+">" );
+        final String confirmationUrl = request().host() + routes.Application.registrationConfirmation( registration.uuid ).toString();
+        email.setBodyText("Copy and paste the following link into your address bar to confirm your registration:\n" + confirmationUrl);
 
+        // Send the email.
+        MailerPlugin.send( email );
+
+        return redirect( routes.Application.registrationEmailSent( registration.email ) );
+    }
+
+    public Result  registrationConfirmation( String uuid ) {
+        return ok( registrationConfirmation.render() );
+    }
+
+    public Result registrationEmailSent( String email ) {
+        return ok( registrationEmailSent.render( email ) );
     }
 }
