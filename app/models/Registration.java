@@ -31,11 +31,9 @@ public class Registration extends Model {
     @Column(nullable=false)
     public String firstName;
 
-    /*
     @Required
     @Column(nullable=false)
     public Date dateOfBirth;
-    */
 
     @Required
     @MaxLength(50)
