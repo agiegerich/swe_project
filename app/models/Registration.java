@@ -89,7 +89,8 @@ public class Registration extends Model {
     */
     
     public static Optional<Registration> findByUuid(String uuid){
-        return Optional.of(find.where().eq("uuid", uuid).findUnique());
+        Registration registration = find.where().eq("uuid", uuid).findUnique();
+        return registration == null ? Optional.empty() : Optional.of( registration );
     }
     
     // TODO

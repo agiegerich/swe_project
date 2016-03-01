@@ -1,5 +1,7 @@
 package controllers;
 
+import exceptions.RoleConfirmationDoesNotExist;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ import play.data.Form;
 import play.mvc.*;
 
 import models.Registration;
+import models.Role;
 import models.User;
 
 import play.libs.mailer.Email;
@@ -54,15 +57,29 @@ public class Application extends Controller {
 
         // Validate the form.
         Form<Registration> registrationForm = Form.form( Registration.class ).bindFromRequest();
+
         Map<String, String> data = registrationForm.data();
-        for ( String d : data.keySet() ) {
-            Logger.debug( d + ": "+ data.get(d) +"\n" );
-        }
-        if ( registrationForm.hasErrors() ) {
-            return sendBadRequest( Util.getErrorList( registrationForm ) );
+
+        for ( String key : data.keySet() ) {
+            Logger.debug( key + ": " + data.get(key) + "\n" );
         }
 
+
+        if ( registrationForm.hasErrors() ) {
+            return sendBadRequest( ApplicationHelpers.getErrorList( registrationForm ) );
+        }
+
+
         Registration registration = registrationForm.get();
+
+        if ( registration.role != Role.USER ) {
+            try {
+                ApplicationHelpers.confirmRoleAndDelete( registration.email, registration.role, registration.roleConfirmationId );
+            } catch ( RoleConfirmationDoesNotExist e ) {
+                return sendBadRequest( "The role ID you entered is not correct." );
+            }
+        }
+
         
         // Add a UUID to the Registration so that we can verify the registration via email.
         registration.uuid = UUID.randomUUID().toString();
@@ -104,7 +121,7 @@ public class Application extends Controller {
             
             return ok( registrationConfirmation.render() );
         } else {
-            return sendBadRequest("BAD REQUEST: There is no registration request corresponding to this link.");
+            return sendBadRequest("There is no registration request corresponding to this link.");
         }
 
     }

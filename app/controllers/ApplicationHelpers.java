@@ -1,13 +1,20 @@
 package controllers;
 
+import exceptions.RoleConfirmationDoesNotExist;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import models.Role;
+import models.RoleConfirmation;
 
 import play.data.Form;
 import play.data.validation.ValidationError;
 
-public class Util {
+
+public class ApplicationHelpers {
 
     public static String hyperlink( String url ) {
         String hyperlink = 
@@ -44,5 +51,22 @@ public class Util {
         }
 
         return errorList;
+    }
+
+    public static void confirmRoleAndDelete( String email, Role role, int roleConfirmationId ) throws RoleConfirmationDoesNotExist {
+        Optional<RoleConfirmation> potentialRoleConfirmation = RoleConfirmation.findByEmail( email );
+
+        if ( !potentialRoleConfirmation.isPresent() ) {
+            throw new RoleConfirmationDoesNotExist();
+        }             
+
+        RoleConfirmation roleConfirmation = potentialRoleConfirmation.get();
+
+        if ( roleConfirmationId != roleConfirmation.roleConfirmationId || roleConfirmation.role != role) {
+            throw new RoleConfirmationDoesNotExist();
+        }
+
+        // Delete the role confirmation id since the user it corresponds to will be created.
+        roleConfirmation.delete();
     }
 }
