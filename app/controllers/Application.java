@@ -60,10 +60,10 @@ public class Application extends Controller {
         Logger.info("Recieved registration request.");
 
         // Validate the form.
-        Form<Registration> registrationForm = Form.form( Registration.class ).bindFromRequest();
+
+        Form<Registration> registrationForm = Form.form( Registration.class ).fill(new Registration(null)).bindFromRequest();
 
         Map<String, String> data = registrationForm.data();
-
         for ( String key : data.keySet() ) {
             Logger.debug( key + ": " + data.get(key) + "\n" );
         }

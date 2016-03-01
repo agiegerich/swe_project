@@ -66,11 +66,14 @@ public class Registration extends Model {
     @Column(nullable=false)
     public Gender gender;
 
-    @Column(nullable=false)
-    public int roleConfirmationId;
+    public Integer roleConfirmationId;
 
     
     public static Model.Finder<String, Registration> find = new Model.Finder<String, Registration>(String.class, Registration.class);
+
+    public Registration(Integer roleConfirmationId) {
+        this.roleConfirmationId = roleConfirmationId;
+    }
     
     // TODO
     // This method appears to be a constructor but is actually an object method. Cannot be used to construct an object.
