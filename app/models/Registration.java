@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Optional;
 import java.util.UUID;
 
 import play.db.ebean.Model;
@@ -87,8 +88,8 @@ public class Registration extends Model {
     }
     */
     
-    public Registration findByUuid(String uuid){
-        return find.where().eq("uuid", uuid).findUnique();
+    public static Optional<Registration> findByUuid(String uuid){
+        return Optional.of(find.where().eq("uuid", uuid).findUnique());
     }
     
     // TODO

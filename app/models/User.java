@@ -63,7 +63,7 @@ public class User extends Model {
     
     public static Model.Finder<String, User> find = new Finder(String.class, User.class);
     
-    public User(String email, String firstName, String lastName, String companyName, Gender gender, Date dateOfBirth, String password, Role role){
+    public User(String email, String firstName, String lastName, Gender gender, Date dateOfBirth, String password, Role role){
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;

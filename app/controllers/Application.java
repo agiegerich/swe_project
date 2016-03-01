@@ -1,7 +1,9 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import javax.persistence.EntityManager;
 
@@ -10,6 +12,7 @@ import play.data.Form;
 import play.mvc.*;
 
 import models.Registration;
+import models.User;
 
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
@@ -35,7 +38,13 @@ public class Application extends Controller {
         return ok(index.render());
     }
 
-    public Result badRequest(List<String> errors) {
+    public Result sendBadRequest( String error ) {
+        List<String> errorList = new ArrayList<>();
+        errorList.add( error );
+        return sendBadRequest( errorList );
+    }
+
+    public Result sendBadRequest(List<String> errors) {
         return badRequest( badRequest.render(errors) );
     }
 
@@ -50,7 +59,7 @@ public class Application extends Controller {
             Logger.debug( d + ": "+ data.get(d) +"\n" );
         }
         if ( registrationForm.hasErrors() ) {
-            return badRequest( badRequest.render( Util.getErrorList( registrationForm )) );
+            return sendBadRequest( Util.getErrorList( registrationForm ) );
         }
 
         Registration registration = registrationForm.get();
@@ -75,8 +84,29 @@ public class Application extends Controller {
         return redirect( routes.Application.registrationEmailSent( registration.email ) );
     }
 
-    public Result  registrationConfirmation( String uuid ) {
-        return ok( registrationConfirmation.render() );
+    public Result registrationConfirmation( String uuid ) {
+        Optional<Registration> potentialCorrespondingRegistration = Registration.findByUuid( uuid );
+        if ( potentialCorrespondingRegistration.isPresent() ) {
+
+            Registration correspondingRegistration = potentialCorrespondingRegistration.get();
+
+            User newUser = new User( 
+                    correspondingRegistration.email, 
+                    correspondingRegistration.firstName,
+                    correspondingRegistration.lastName,
+                    correspondingRegistration.gender,
+                    correspondingRegistration.dateOfBirth,
+                    correspondingRegistration.password,
+                    correspondingRegistration.role );
+            
+            newUser.save();
+            correspondingRegistration.delete();
+            
+            return ok( registrationConfirmation.render() );
+        } else {
+            return sendBadRequest("BAD REQUEST: There is no registration request corresponding to this link.");
+        }
+
     }
 
     public Result registrationEmailSent( String email ) {
