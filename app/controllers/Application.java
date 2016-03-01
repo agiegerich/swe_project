@@ -1,5 +1,7 @@
 package controllers;
 
+import constants.R;
+
 import exceptions.RoleConfirmationDoesNotExist;
 
 import java.util.ArrayList;
@@ -9,7 +11,9 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.persistence.EntityManager;
 
+
 import play.*;
+import play.api.Play;
 import play.data.Form;
 import play.mvc.*;
 
@@ -69,8 +73,13 @@ public class Application extends Controller {
             return sendBadRequest( ApplicationHelpers.getErrorList( registrationForm ) );
         }
 
-
         Registration registration = registrationForm.get();
+        Logger.debug("Password before encryption: " + registration.password );
+        registration.password = Encryptor.encrypt( R.AES_KEY, R.AES_IV, registration.password);
+        Logger.debug("Password after encryption : " + registration.password );
+        Logger.debug("Password after decryption : " + Encryptor.decrypt( R.AES_KEY, R.AES_IV, registration.password ));
+
+
 
         if ( registration.role != Role.USER ) {
             try {
