@@ -68,7 +68,6 @@ public class Application extends Controller {
             Logger.debug( key + ": " + data.get(key) + "\n" );
         }
 
-
         if ( registrationForm.hasErrors() ) {
             return sendBadRequest( ApplicationHelpers.getErrorList( registrationForm ) );
         }
