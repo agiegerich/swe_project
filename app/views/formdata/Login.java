@@ -1,4 +1,4 @@
-package views;
+package views.formdata;
 
 public class Login {
 
