@@ -28,6 +28,7 @@ import play.libs.mailer.MailerPlugin;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 
+import views.formdata.Login;
 import views.html.*;
 
 
@@ -44,6 +45,27 @@ public class Application extends Controller {
     public Result index() { 
         return ok(index.render());
     }
+
+    public Result login() {
+        return ok(login.render(Form.form(Login.class)));
+    }
+
+    public Result postLogin() {
+
+        Form<Login> formData = Form.form(Login.class).bindFromRequest();
+
+        if (formData.hasErrors()) {
+        flash("error", "Login credentials not valid.");
+        return badRequest(login.render(formData));
+        }
+        else {
+    
+        session().clear();
+        session("email", formData.get().email);
+        return redirect(routes.Application.index());
+        }
+    }
+
 
     public Result sendBadRequest( String error ) {
         List<String> errorList = new ArrayList<>();
