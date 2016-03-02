@@ -14,3 +14,6 @@ GET     /registration-email-sent/:email     controllers.Application.registration
 
 GET     /registration-confirmation/:uuid    controllers.Application.registrationConfirmation(uuid: String)
 
+#Loggin
+GET 	/login 								controllers.Application.login()
+POST 	/login 								controllers.Application.postLogin()
