@@ -17,3 +17,5 @@ GET     /registration-confirmation/:uuid    controllers.Application.registration
 #Loggin
 GET 	/login 								controllers.Application.login()
 POST 	/login 								controllers.Application.postLogin()
+
+GET     /login-success                      controllers.Application.loginSuccess()

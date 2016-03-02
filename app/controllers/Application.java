@@ -54,16 +54,35 @@ public class Application extends Controller {
 
         Form<Login> formData = Form.form(Login.class).bindFromRequest();
 
-        if (formData.hasErrors()) {
-        flash("error", "Login credentials not valid.");
-        return badRequest(login.render(formData));
+        Map<String, String> tempFormData = formData.data();
+        for ( String key : tempFormData.keySet() ) {
+            Logger.debug( key + ": " + tempFormData.get( key ) ); 
         }
-        else {
-    
+
+        if (formData.hasErrors()) {
+            flash("error", "Login credentials not valid.");
+            return sendBadRequest("Login form was not filled out properly.");
+        }
+
+        Login login = formData.get();
+
+        Optional<User> potentialUser = User.findByEmail(login.email);
+        if ( !potentialUser.isPresent() ) {
+            return sendBadRequest("User with that email does not exist.");
+        }
+
+        User user = potentialUser.get();
+        if (!Encryptor.decrypt( R.AES_KEY, R.AES_IV, user.password).equals( login.password )) {
+            return sendBadRequest("Password is incorrect.");
+        }
+
         session().clear();
         session("email", formData.get().email);
-        return redirect(routes.Application.index());
-        }
+        return redirect(routes.Application.loginSuccess());
+    }
+
+    public Result loginSuccess() {
+        return ok( loginSuccess.render() );
     }
 
 

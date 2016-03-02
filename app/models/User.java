@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Date;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -62,6 +63,11 @@ public class User extends Model {
 
     
     public static Model.Finder<String, User> find = new Finder(String.class, User.class);
+
+    public static Optional<User> findByEmail(String email){
+        User user = find.where().eq("email", email).findUnique();
+        return user == null ? Optional.empty() : Optional.of( user );
+    }
     
     public User(String email, String firstName, String lastName, Gender gender, Date dateOfBirth, String password, Role role){
         this.email = email;
