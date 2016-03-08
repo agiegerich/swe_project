@@ -1,44 +1,46 @@
 
 @main("Registration") {
+    <head>
+		<script src="@routes.Assets.versioned("javascripts/index.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/jquery-2.2.1.js")" type="text/javascript"></script>
+	</head>
+
     <div>
-        <form action="/registration" method="post">
-			First name:<br>
-			<input type="text" name="firstName" value="" maxlength="100" required/>
-			<br />
-			Last name:<br> 
-			<input type="text" name="lastName" value="" maxlength="100" required/>
-			<br />
-			Email:<br>
-			<input type="email" name="email" value="" maxlength="100" required/>
-			<br />
-			Date of Birth:<br>
-			<input type="date" name="dateOfBirth" value="" max="1998-1-1" required/>
-			<br />
-			Password:<br>
-			<input type="password" name="password" value="" required/>
-			<br />
-			Repeat Password:<br>
-			<input type="password" name="repeatPassword" value="" required/>
-			<br />
-			Role:<br>
-			<select name="role" required>
-				<option value="USER">User</option>
-				<option value="MANAGER">Manager</option>
-				<option value="ADMINISTRATOR">Administrator</option>
-			</select>
-			Role:<br>
-			<select name="gender" required>
-                <option value="MALE">Male</option>
-				<option value="FEMALE">Female</option>
-			</select>
-			<br />
-			<div id="mngrID">
-				Manager/Admin ID:<br>
-				<input type="number" name="roleConfirmationId" value="" maxlength="10"/>
+        <form id="registrationForm" action="/registration" method="post">
+			<fieldset>
+				<legend>Registration Form</legend>
+				<label class="field">First name:<label/>
+				<input class="textbox" type="text" name="firstName" value="" maxlength="100" required/>
 				<br />
-			</div>
-			<input type="submit" value="Submit" />
+				<label class="field">Last name:<label/><input class="textbox" type="text" name="lastName" value="" maxlength="100" required/>
+				<br />
+				<label class="field">Email:<label/><input class="textbox" type="email" name="email" placeholder="Email" maxlength="100" required/>
+				<br />
+				<label class="field">Date of Birth:<label/><input class="textbox" type="date" name="dateOfBirth" value="" max="1998-1-1" required/>
+				<br />
+				<label class="field">Password:<label/><input id="password" class="textbox" type="password" name="password" value="" required/>
+				<br />
+				<label class="field">Repeat Password:<label/><input id="repeatPassword" class="textbox" type="password" name="repeatPassword" value="" required/>
+				<br />
+				<label class="field">Role:<label/>
+				<select id="role" name="role" required>
+					<option value="USER">User</option>
+					<option value="MANAGER">Manager</option>
+					<option value="ADMIN">Administrator</option>
+				</select>
+				<br />
+				<label class="field">Gender:<label/>
+				<select name="gender" required>
+	                <option value="MALE">Male</option>
+					<option value="FEMALE">Female</option>
+				</select>
+				<br />
+				<div id="mngrID">
+					<label class="field">Manager/Admin ID:<label/><input class="textbox" type="number" name="roleConfirmationId" value="" maxlength="10" required/>
+					<br />
+				</div>
+				<input id="button" type="submit" value="Submit" />
+			</fieldset>
 		</form>
 	</div>
-    <a href="@routes.Application.login">Login</a>
 }

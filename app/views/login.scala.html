@@ -8,26 +8,35 @@
         @form.globalError.message
     </p>
 	}
-
-   <p>
-       <input type="email" name="email" placeholder="Email" value="@form("email").value">
-   </p>
-   <p>
-       <input type="password" name="password" placeholder="Password">
-   </p>
-   <p>
-       <button type="submit">Login</button>
-   </p>
+    <fieldset>
+    <legend>Login</legend>
+       <p>
+           <input type="email" name="email" placeholder="Email" value="@form("email").value">
+       </p>
+       <p>
+           <input type="password" name="password" placeholder="Password">
+       </p>
+       <p>
+           <button type="submit">Login</button>
+       </p>
+       <br>
+       <a href="">Forgot Password</a>
+       <a href="">Change Password</a>
+    </fieldset>
 }
 
 <html>
     <head>
         <title>Home</title>
+        <link rel="stylesheet" type="text/css" href="/public/stylesheets/main.css">
     </head>
     <body>
+        <div id="topBar" style="background-color: #EEE1B1;top: 0;left: 0;height: 60px;width: 100%;position: fixed">
+            <a href="/" style="float:right;padding:20px">Registration</a>
+            <a href="/login" style="float:right;padding:20px">Login</a>
+        </div>
         <header>
             <a href="@routes.Application.index" id="logo"><span>Home</span></a>
         </header>
-    
     </body>
 </html>

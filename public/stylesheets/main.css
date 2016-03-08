@@ -1,0 +1,35 @@
+body{
+	background-color: linen;
+	text-align: left;
+}
+
+#registrationForm {
+	text-align: left;
+}
+fieldset {
+	padding: 5px;
+	width: 600px;
+	background-color: lightgray;
+}
+
+input.textbox {
+	width: 150px;
+	margin: auto;
+	float: left;
+}
+
+input#button {
+	width: 60px;
+	font-weight: bold;
+}
+
+legend {
+	font-weight: bold;
+}
+
+label.field{
+	font-weight: bold;
+	text-align: right;
+	float: left;
+	width: 150px;
+}
