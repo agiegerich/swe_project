@@ -18,6 +18,7 @@ import constants.R;
 import models.Gender;
 import models.Registration;
 import models.Role;
+import models.User;
 
 import play.mvc.*;
 import play.test.*;
@@ -108,6 +109,20 @@ public class ApplicationTest {
         } else {
             assertEquals( registration, newRegistration.get() );
         }
+    }
+
+    @Test
+    public void getUserByEmailTest() {
+        String email = "test@email.com";
+        User user = new User( email, "test", "test", Gender.MALE, new Date(), "test", Role.USER);
+        user.save();
+        Optional<User> newUser =  User.findByEmail(email);
+
+        if (!newUser.isPresent()) {
+            fail("No user with that email");
+        }
+
+        assertEquals( newUser.get().id, user.id );
     }
 
 }

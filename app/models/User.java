@@ -81,4 +81,28 @@ public class User extends Model {
         this.save();
     }
 
+    @Override
+    public boolean equals(Object otherUser) {
+        if (otherUser == null) {
+            return false;
+        }
+
+        if (otherUser == this) {
+            return true;
+        }
+
+        if (!(otherUser instanceof User)) {
+            return false;
+        } else {
+            User user = (User)otherUser;
+            return user.id == this.id;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(this.id);
+    }
+    
+
 }
