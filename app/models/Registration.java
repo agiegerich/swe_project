@@ -1,19 +1,14 @@
 package models;
 
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Optional;
-import java.util.UUID;
-
-import play.db.ebean.Model;
+import com.avaje.ebean.Model;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Optional;
 
 @Entity
 public class Registration extends Model {
@@ -69,29 +64,10 @@ public class Registration extends Model {
     public Integer roleConfirmationId;
 
     
-    public static Model.Finder<String, Registration> find = new Model.Finder<String, Registration>(String.class, Registration.class);
+    public static Model.Finder<String, Registration> find = new Model.Finder<>(Registration.class);
 
     public Registration( Integer roleConfirmationId ) {
         this.roleConfirmationId = roleConfirmationId;
-    }
-
-    @Override
-    public boolean equals(Object that) {
-        if (that == null) {
-            return false;
-        } else if ( this == that ) {
-            return true;
-        } else if (!(that instanceof Registration)) {
-            return false;
-        } else {
-            Registration registration = (Registration)that;
-            return this.id == registration.id;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Long.hashCode(this.id);
     }
 
     public Registration(
@@ -104,7 +80,7 @@ public class Registration extends Model {
             Gender gender,
             String password, 
             String repeatPassword, 
-            Integer roleConfirmatationId){
+            Integer roleConfirmationId){
         this.uuid = uuid;
         this.firstName = firstName;
         this.lastName = lastName;

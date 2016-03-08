@@ -1,47 +1,34 @@
 package controllers;
 
 import constants.R;
-
-import exceptions.RoleConfirmationDoesNotExist;
 import exceptions.EncryptorException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import javax.persistence.EntityManager;
-
-
-import play.*;
-import play.api.Play;
-import play.data.Form;
-import play.mvc.*;
-
+import exceptions.RoleConfirmationDoesNotExist;
 import models.Registration;
 import models.Role;
 import models.User;
-
+import play.Logger;
+import play.data.Form;
+import play.db.jpa.Transactional;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
-
-
-import play.db.jpa.JPA;
-import play.db.jpa.Transactional;
-
+import play.mvc.Controller;
+import play.mvc.Result;
 import views.formdata.Login;
 import views.html.*;
+
+import java.util.*;
 
 
 public class Application extends Controller {
 
     /**
      * Set the result to be a Json result.
-     */
+
     public Result jsonResult(Result response) {
         response().setContentType("application/json; charset=utf-8");   
         return response;
     }
+     */
 
     public Result index() { 
         return ok(index.render());

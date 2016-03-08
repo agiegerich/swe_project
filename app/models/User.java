@@ -1,20 +1,14 @@
 package models;
 
-import java.util.Date;
-import java.util.Optional;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.UniqueConstraint;
-
-
-import play.db.ebean.Model;
+import com.avaje.ebean.Model;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Optional;
 
 @Entity
 public class User extends Model {
@@ -62,7 +56,7 @@ public class User extends Model {
     public Role role;
 
     
-    public static Model.Finder<String, User> find = new Finder(String.class, User.class);
+    public static Model.Finder<String, User> find = new Model.Finder<>(User.class);
 
     public static Optional<User> findByEmail(String email){
         User user = find.where().eq("email", email).findUnique();
@@ -80,29 +74,5 @@ public class User extends Model {
         this.role = role;
         this.save();
     }
-
-    @Override
-    public boolean equals(Object otherUser) {
-        if (otherUser == null) {
-            return false;
-        }
-
-        if (otherUser == this) {
-            return true;
-        }
-
-        if (!(otherUser instanceof User)) {
-            return false;
-        } else {
-            User user = (User)otherUser;
-            return user.id == this.id;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Long.hashCode(this.id);
-    }
-    
 
 }
