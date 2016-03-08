@@ -1,5 +1,7 @@
 package controllers;
 
+import exceptions.EncryptorException;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,7 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import play.Logger;
 
 public class Encryptor {
-    public static String encrypt(String key, String initVector, String value) {
+    public static String encrypt(String key, String initVector, String value) throws EncryptorException {
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
 
@@ -30,14 +32,12 @@ public class Encryptor {
             //Logger.debug("encrypted string: "+ Base64.encodeBase64String(encrypted));
 
             return Base64.encodeBase64String(encrypted);
-        } catch (Exception ex) {
-            Logger.error( Util.getStackTrace( ex ) );
+        } catch (Exception e) {
+            throw new EncryptorException("Failed to encrypt.", e);
         }
-
-        return null;
     }
 
-    public static String decrypt(String key, String initVector, String encrypted) {
+    public static String decrypt(String key, String initVector, String encrypted) throws EncryptorException {
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
 
@@ -56,9 +56,7 @@ public class Encryptor {
 
             return new String(original);
         } catch (Exception e) {
-            Logger.error( Util.getStackTrace( e ) );
+            throw new EncryptorException("Failed to decrypt.", e);
         }
-
-        return null;
     }
 }

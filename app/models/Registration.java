@@ -71,37 +71,54 @@ public class Registration extends Model {
     
     public static Model.Finder<String, Registration> find = new Model.Finder<String, Registration>(String.class, Registration.class);
 
-    public Registration(Integer roleConfirmationId) {
+    public Registration( Integer roleConfirmationId ) {
         this.roleConfirmationId = roleConfirmationId;
     }
-    
-    // TODO
-    // This method appears to be a constructor but is actually an object method. Cannot be used to construct an object.
-    /*
-    public boolean Registration(String firstName, String lastName, String email, Role role, String password, String repeatPassword){
-        if(password == repeatPassword){
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.email = email;
-            this.password = password;
-            this.role = role;
-            this.save();
+
+    @Override
+    public boolean equals(Object that) {
+        if (that == null) {
+            return false;
+        } else if ( this == that ) {
             return true;
-        }else return false;
+        } else if (!(that instanceof Registration)) {
+            return false;
+        } else {
+            Registration registration = (Registration)that;
+            return this.id == registration.id;
+        }
     }
-    */
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(this.id);
+    }
+
+    public Registration(
+            String uuid,
+            String firstName, 
+            String lastName, 
+            String email, 
+            Date dateOfBirth,
+            Role role, 
+            Gender gender,
+            String password, 
+            String repeatPassword, 
+            Integer roleConfirmatationId){
+        this.uuid = uuid;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.repeatPassword = repeatPassword;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.role = role;
+        this.roleConfirmationId = roleConfirmationId;
+    }
     
     public static Optional<Registration> findByUuid(String uuid){
         Registration registration = find.where().eq("uuid", uuid).findUnique();
         return registration == null ? Optional.empty() : Optional.of( registration );
     }
-    
-    // TODO
-    // What is the point of this method? Why not just call user.delete() instead of user.removeRegistration( user )?
-    /*
-    public void removeRegistration(Registration user){
-        user.delete();
-    }
-    */
-
 }

@@ -3,6 +3,7 @@ package controllers;
 import constants.R;
 
 import exceptions.RoleConfirmationDoesNotExist;
+import exceptions.EncryptorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +73,12 @@ public class Application extends Controller {
         }
 
         User user = potentialUser.get();
-        if (!Encryptor.decrypt( R.AES_KEY, R.AES_IV, user.password).equals( login.password )) {
-            return sendBadRequest("Password is incorrect.");
+        try { 
+            if (!Encryptor.decrypt( R.AES_KEY, R.AES_IV, user.password).equals( login.password )) {
+                return sendBadRequest("Password is incorrect.");
+            }
+        } catch (EncryptorException e) {
+            return sendBadRequest(Util.getStackTrace(e));
         }
 
         session().clear();
@@ -114,12 +119,14 @@ public class Application extends Controller {
         }
 
         Registration registration = registrationForm.get();
-        Logger.debug("Password before encryption: " + registration.password );
-        registration.password = Encryptor.encrypt( R.AES_KEY, R.AES_IV, registration.password);
-        Logger.debug("Password after encryption : " + registration.password );
-        Logger.debug("Password after decryption : " + Encryptor.decrypt( R.AES_KEY, R.AES_IV, registration.password ));
-
-
+        try {
+            Logger.debug("Password before encryption: " + registration.password );
+            registration.password = Encryptor.encrypt( R.AES_KEY, R.AES_IV, registration.password);
+            Logger.debug("Password after encryption : " + registration.password );
+            Logger.debug("Password after decryption : " + Encryptor.decrypt( R.AES_KEY, R.AES_IV, registration.password ));
+        } catch (EncryptorException e) {
+            return sendBadRequest(Util.getStackTrace(e));
+        }
 
         if ( registration.role != Role.USER ) {
             try {
