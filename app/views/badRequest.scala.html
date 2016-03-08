@@ -1,6 +1,6 @@
 @(errors: List[String])
 
-@main("Bad Request") {
+@main("Bad Request")(new ArrayList())(new ArrayList()){
     <h2>Bad Request</h2>
     @for(index <- 0 until errors.size) {
         <p>@errors(index)</p>
