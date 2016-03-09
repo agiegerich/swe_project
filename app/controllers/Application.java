@@ -1,47 +1,36 @@
 package controllers;
 
 import constants.R;
-
-import exceptions.RoleConfirmationDoesNotExist;
 import exceptions.EncryptorException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import javax.persistence.EntityManager;
-
-
-import play.*;
-import play.api.Play;
-import play.data.Form;
-import play.mvc.*;
-
+import exceptions.RoleConfirmationDoesNotExist;
 import models.Registration;
 import models.Role;
 import models.User;
-
+import play.Logger;
+import play.data.Form;
+import play.db.jpa.Transactional;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
-
-
-import play.db.jpa.JPA;
-import play.db.jpa.Transactional;
-
+import play.mvc.Controller;
+import play.mvc.Result;
 import views.formdata.Login;
+import views.formdata.ResetPassword;
 import views.html.*;
 
+import java.util.*;
+import java.security.SecureRandom;
+import java.math.BigInteger;
 
 public class Application extends Controller {
 
     /**
      * Set the result to be a Json result.
-     */
+
     public Result jsonResult(Result response) {
         response().setContentType("application/json; charset=utf-8");   
         return response;
     }
+     */
 
     public Result index() { 
         return ok(index.render());
@@ -83,11 +72,11 @@ public class Application extends Controller {
 
         session().clear();
         session("email", formData.get().email);
-        return redirect(routes.Application.loginSuccess());
+        return redirect(routes.Application.loginSuccess(user.firstName));
     }
 
-    public Result loginSuccess() {
-        return ok( loginSuccess.render() );
+    public Result loginSuccess(String name) {
+        return ok( loginSuccess.render(name) );
     }
 
 
@@ -115,6 +104,7 @@ public class Application extends Controller {
         }
 
         if ( registrationForm.hasErrors() ) {
+            Logger.debug("Found errors in registration form.");
             return sendBadRequest( ApplicationHelpers.getErrorList( registrationForm ) );
         }
 
@@ -184,5 +174,52 @@ public class Application extends Controller {
 
     public Result registrationEmailSent( String email ) {
         return ok( registrationEmailSent.render( email ) );
+    }
+    
+    public Result resetPassword() {
+        return ok( resetPassword.render(Form.form(ResetPassword.class)) );
+    }
+
+    public Result resetPasswordPost() {
+        Form<ResetPassword> formData = Form.form(ResetPassword.class).bindFromRequest();
+
+        ResetPassword passData = formData.get();
+
+        if (formData.hasErrors()) {
+            flash("error", "Email credentials not valid.");
+            return sendBadRequest("Change Password form was not filled out properly.");
+        }
+
+        Optional<User> potentialUser = User.findByEmail(passData.email);
+
+        if ( !potentialUser.isPresent() ) {
+            return sendBadRequest("User with that email does not exist.");
+        }
+
+        User user = potentialUser.get();
+
+        SecureRandom random = new SecureRandom();
+        Email emailOut = new Email();
+        emailOut.setSubject("Change Password Request");
+        emailOut.setFrom("SGL Mailer <team10mailer@gmail.com>");
+        emailOut.addTo( "TO <"+ user.email +">" );
+        final String newPassword = new BigInteger(130, random).toString(32);
+        emailOut.setBodyText("Please enter the following as your new password to log in:\n" + newPassword);
+
+        // Send the email.
+        MailerPlugin.send( emailOut );
+        try {
+            final String newPasswordEncrypt = Encryptor.encrypt( R.AES_KEY, R.AES_IV, newPassword);
+            user.password = newPasswordEncrypt;
+            user.save();
+        }  catch (EncryptorException e) {
+           return sendBadRequest(Util.getStackTrace(e));
+        }
+
+        return redirect( routes.Application.resetPasswordEmailSent( user.email ) );
+    }
+
+    public Result resetPasswordEmailSent( String email ) {
+        return ok( resetPasswordEmailSent.render( email ) );
     }
 }

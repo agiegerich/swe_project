@@ -18,4 +18,11 @@ GET     /registration-confirmation/:uuid    controllers.Application.registration
 GET 	/login 								controllers.Application.login()
 POST 	/login 								controllers.Application.postLogin()
 
-GET     /login-success                      controllers.Application.loginSuccess()
+GET     /login-success/:name                controllers.Application.loginSuccess(name: String)
+
+#PasswordChange
+GET		/reset-password						controllers.Application.resetPassword()
+
+POST 	/reset-password         			controllers.Application.resetPasswordPost()
+
+GET 	/reset-password/:email 				controllers.Application.resetPasswordEmailSent(email: String)
