@@ -102,6 +102,7 @@ public class Application extends Controller {
         }
 
         if ( registrationForm.hasErrors() ) {
+            Logger.debug("Found errors in registration form.");
             return sendBadRequest( ApplicationHelpers.getErrorList( registrationForm ) );
         }
 

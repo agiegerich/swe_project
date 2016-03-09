@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import play.data.format.Formats;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
@@ -28,6 +29,7 @@ public class Registration extends Model {
     public String firstName;
 
     @Required
+    @Formats.DateTime(pattern = "yyyy-MM-dd")
     @Column(nullable=false)
     public Date dateOfBirth;
 
