@@ -18,4 +18,4 @@ GET     /registration-confirmation/:uuid    controllers.Application.registration
 GET 	/login 								controllers.Application.login()
 POST 	/login 								controllers.Application.postLogin()
 
-GET     /login-success                      controllers.Application.loginSuccess()
+GET     /login-success/:name                controllers.Application.loginSuccess(name: String)

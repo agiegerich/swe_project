@@ -70,11 +70,11 @@ public class Application extends Controller {
 
         session().clear();
         session("email", formData.get().email);
-        return redirect(routes.Application.loginSuccess());
+        return redirect(routes.Application.loginSuccess(user.firstName));
     }
 
-    public Result loginSuccess() {
-        return ok( loginSuccess.render() );
+    public Result loginSuccess(String name) {
+        return ok( loginSuccess.render(name) );
     }
 
 
