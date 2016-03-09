@@ -26,3 +26,4 @@ GET		/reset-password						controllers.Application.resetPassword()
 POST 	/reset-password         			controllers.Application.resetPasswordPost()
 
 GET 	/reset-password/:email 				controllers.Application.resetPasswordEmailSent(email: String)
+

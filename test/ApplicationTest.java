@@ -1,40 +1,26 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.Date;
-import java.util.Optional;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import com.google.common.collect.ImmutableMap;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.avaje.ebean.Ebean;
-import org.junit.*;
+import constants.R;
 import controllers.Encryptor;
 import controllers.Util;
-import constants.R;
 import models.Gender;
 import models.Registration;
 import models.Role;
 import models.User;
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import play.test.FakeApplication;
+import play.test.Helpers;
 
-import play.mvc.*;
-import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.db.evolutions.Evolutions;
-import play.db.Database;
-import play.db.Databases;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
-import play.twirl.api.Content;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
 
-import static play.test.Helpers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -58,8 +44,8 @@ public class ApplicationTest {
             app.getWrappedApplication().getFile("conf/evolutions/default/1.sql"));
 
         // Splitting the String to get Create & Drop DDL
-        String[] splittedEvolutionContent = evolutionContent.split("# --- !Ups");
-        String[] upsDowns = splittedEvolutionContent[1].split("# --- !Downs");
+        String[] splitEvolutionContent = evolutionContent.split("# --- !Ups");
+        String[] upsDowns = splitEvolutionContent[1].split("# --- !Downs");
         createDdl = upsDowns[0];
         dropDdl = upsDowns[1];
 
@@ -79,8 +65,7 @@ public class ApplicationTest {
 
     @Test
     public void renderTemplate() {
-        Content html = views.html.index.render();
-        assertEquals("text/html", contentType(html));
+        assertEquals("text/html", views.html.index.render().contentType());
     }
 
     @Test
@@ -107,7 +92,7 @@ public class ApplicationTest {
         if (!newRegistration.isPresent() ) {
             fail("No registration with that uuid.");
         } else {
-            assertEquals( registration, newRegistration.get() );
+            assertEquals( registration.id, newRegistration.get().id );
         }
     }
 
