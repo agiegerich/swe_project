@@ -40,6 +40,25 @@ public class Product extends Model {
     public long getId(){
         return this.id;
     }
+
+    public String getProductName(){
+        return this.productName;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    public Integer getQuantity() {
+        return this.quantity;
+    }
+
+    public Product(long id, String productName, String category, Integer quantity){
+        this.id = id;
+        this.productName = productName;
+        this.category = category;
+        this.quantity = quantity;
+    }
 }
 
 

@@ -30,3 +30,4 @@ GET 	/reset-password/:email 				controllers.Application.resetPasswordEmailSent(e
 
 #Product
 GET		/product							controllers.productController.list()
+POST 	/product 							controllers.productController.addProduct()

@@ -1,7 +1,21 @@
-@(products: List[models.Product])
+@(products: List[models.Product], productForm: Form[views.formdata.ProductDataform])
+
+@import helper._
 
 <ul>
     @for(product <- products) {
-    <li>@product.getId()</li>
+    <li>@product.getId(), @product.getProductName(), @product.getCategory(), @product.getQuantity()</li>
 }
 </ul>
+
+@form(routes.productController.addProduct()) {
+        
+    @inputText(productForm("id"))
+    @inputText(productForm("productName"))
+    @inputText(productForm("category"))
+    @inputText(productForm("quantity"))
+        
+    <input type="submit" value="Create">
+        
+}
+
