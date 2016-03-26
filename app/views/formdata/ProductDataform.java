@@ -6,6 +6,5 @@ public class ProductDataform {
     public String productName;
     public String category;
     public int quantity;
-    public int price;
-
+    public Long price;
 }

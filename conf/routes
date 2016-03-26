@@ -32,3 +32,4 @@ GET 	/reset-password/:email 				controllers.Application.resetPasswordEmailSent(e
 GET		/product							controllers.ProductController.list()
 POST 	/product 							controllers.ProductController.addProduct()
 
+GET     /product/category/:category         controllers.ProductController.listFilterByCategory( category: String )
