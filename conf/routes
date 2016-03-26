@@ -29,5 +29,6 @@ POST 	/reset-password         			controllers.Application.resetPasswordPost()
 GET 	/reset-password/:email 				controllers.Application.resetPasswordEmailSent(email: String)
 
 #Product
-GET		/product							controllers.productController.list()
-POST 	/product 							controllers.productController.addProduct()
+GET		/product							controllers.ProductController.list()
+POST 	/product 							controllers.ProductController.addProduct()
+

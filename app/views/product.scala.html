@@ -2,20 +2,32 @@
 
 @import helper._
 
-<ul>
-    @for(product <- products) {
-    <li>@product.getId(), @product.getProductName(), @product.getCategory(), @product.getQuantity()</li>
-}
-</ul>
+@main("Registration")( Arrays.asList("product") )( Arrays.asList("product") ) {
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Quantity</th>
+    </tr>
+    @for( index <- 0 until products.size) {
+        <tr>
+            <td>@products(index).productName</td>
+            <td>@products(index).category</td>
+            <td>@products(index).quantity</td>
+        </tr>
+    }
+</table>
 
-@form(routes.productController.addProduct()) {
-        
-    @inputText(productForm("id"))
-    @inputText(productForm("productName"))
-    @inputText(productForm("category"))
-    @inputText(productForm("quantity"))
-        
-    <input type="submit" value="Create">
-        
+    @form(routes.ProductController.addProduct()) {
+
+        @inputText(productForm("id"))
+        @inputText(productForm("productName"))
+        @inputText(productForm("category"))
+        @inputText(productForm("quantity"))
+        @inputText(productForm("price"))
+
+        <input type="submit" value="Create">
+
+    }
 }
 

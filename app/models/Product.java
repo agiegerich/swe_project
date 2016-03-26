@@ -30,10 +30,19 @@ public class Product extends Model {
     @Required
     public Integer quantity;
 
+    // price in cents
+    @Required
+    public Integer price;
+
     public static Model.Finder<String, Product> find = new Model.Finder<>(Product.class);
 
     public static List<Product> findAll(){
         List<Product> products = Product.find.all();
+        return products;
+    }
+
+    public static List<Product> findByCategory( String categoryToFind ) {
+        List<Product> products = Product.find.where().eq( "category", categoryToFind ).findList();
         return products;
     }
 
@@ -53,11 +62,12 @@ public class Product extends Model {
         return this.quantity;
     }
 
-    public Product(long id, String productName, String category, Integer quantity){
+    public Product(long id, String productName, String category, Integer quantity, Integer price){
         this.id = id;
         this.productName = productName;
         this.category = category;
         this.quantity = quantity;
+        this.price = price;
     }
 }
 
