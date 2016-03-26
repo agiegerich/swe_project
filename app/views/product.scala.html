@@ -1,0 +1,7 @@
+@(products: List[models.Product])
+
+<ul>
+    @for(product <- products) {
+    <li>@product.getId()</li>
+}
+</ul>
