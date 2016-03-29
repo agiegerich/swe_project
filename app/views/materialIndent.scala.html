@@ -1,0 +1,17 @@
+@(requestForm: Form[views.formdata.MaterialIndentDataform])
+
+@import helper._
+
+@main("Registration")(new ArrayList())(new ArrayList()) {
+
+    @form(routes.MaterialIndentController.makeRequest()) {
+
+        @inputText(requestForm("productName"))
+        @inputText(requestForm("category"))
+        @inputText(requestForm("quantity"))
+
+        <input type="submit" value="Request">
+
+    }
+
+}
