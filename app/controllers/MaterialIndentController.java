@@ -27,21 +27,25 @@ public class MaterialIndentController extends Controller {
 
     final Form<MaterialIndentDataform> requestForm = Form.form(MaterialIndentDataform.class);
 
-    public Result index() {
-        return ok(materialIndent.render(requestForm));
+    public Result index(Long id) {
+
+        User user = User.findById(id);
+        return ok(materialIndent.render(requestForm, user));
     }
 
-    public Result makeRequest() {
+    public Result makeRequest(Long id) {
+
+        User user = User.findById(id);
 
         Form<MaterialIndentDataform> formData = Form.form(MaterialIndentDataform.class).bindFromRequest();
 
         MaterialIndentDataform materialIndent = formData.get();
 
-        MaterialIndent newMaterialIndent = new MaterialIndent(materialIndent.productName, materialIndent.category, materialIndent.quantity);
+        MaterialIndent newMaterialIndent = new MaterialIndent(user, materialIndent.productName, materialIndent.category, materialIndent.quantity);
 
         newMaterialIndent.save();
 
-        return redirect(routes.MaterialIndentController.index());
+        return redirect(routes.MaterialIndentController.index(id));
     }
 
 }

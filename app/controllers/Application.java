@@ -72,11 +72,13 @@ public class Application extends Controller {
 
         session().clear();
         session("email", formData.get().email);
-        return redirect(routes.Application.loginSuccess(user.firstName));
+        return redirect(routes.Application.loginSuccess(user.id));
     }
 
-    public Result loginSuccess(String name) {
-        return ok( loginSuccess.render(name) );
+    public Result loginSuccess(Long id) {
+
+        User user = User.findById(id);
+        return ok( loginSuccess.render(user) );
     }
 
 

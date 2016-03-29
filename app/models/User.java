@@ -57,6 +57,12 @@ public class User extends Model {
         User user = find.where().eq("email", email).findUnique();
         return user == null ? Optional.empty() : Optional.of( user );
     }
+
+
+    public static User findById(Long id) {
+        User user = User.find.where().eq("id", id).findUnique();
+        return user;
+    }
     
     public User(String email, String firstName, String lastName, Gender gender, Date dateOfBirth, String password, Role role){
         this.email = email;

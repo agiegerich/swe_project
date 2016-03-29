@@ -19,7 +19,7 @@ GET     /registration-confirmation/:uuid                controllers.Application.
 GET 	/login 								            controllers.Application.login()
 POST 	/login 								            controllers.Application.postLogin()
 
-GET     /login-success/:name                            controllers.Application.loginSuccess(name: String)
+GET     /login-success/:id 					        	controllers.Application.loginSuccess(id: Long)
 
 #PasswordChange
 GET		/reset-password						            controllers.Application.resetPassword()
@@ -29,8 +29,8 @@ POST 	/reset-password         			            controllers.Application.resetPasswo
 GET 	/reset-password/:email 				            controllers.Application.resetPasswordEmailSent(email: String)
 
 #MaterialIndent
-GET 	/material-indent 								controllers.MaterialIndentController.index()
-POST 	/material-indent 								controllers.MaterialIndentController.makeRequest()
+GET 	/material-indent 								controllers.MaterialIndentController.index(id: Long)
+POST 	/material-indent 								controllers.MaterialIndentController.makeRequest(id: Long)
 
 #Product
 GET		/product							            controllers.ProductController.list()

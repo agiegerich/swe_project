@@ -37,17 +37,18 @@ public class MaterialIndent extends Model {
     @Required
     @Column(nullable=false)
     public Integer quantity;
-
+/*
     @OneToMany
     public List<Inspection> inspections;
-
+*/
     @Column(name="dateOfDelivered")
     @Formats.DateTime(pattern = "yyyy-MM-dd")
     public Date dateOfDelivered;
 
     public static Model.Finder<String, MaterialIndent> find = new Model.Finder<>(MaterialIndent.class);
 
-    public MaterialIndent(String productName, String category, Integer quantity) {
+    public MaterialIndent(User user, String productName, String category, Integer quantity) {
+        this.requester = user;
         this.productName = productName;
         this.category = category;
         this.quantity = quantity;

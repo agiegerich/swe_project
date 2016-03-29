@@ -17,11 +17,11 @@ public class Inspection extends Model {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Long id;
-
+/*
     @ManyToOne
     @Column(nullable=false, name="materialIndent")
     public MaterialIndent materialIndent;
-
+*/
     @Column(name="dateOfDelivered")
     @Formats.DateTime(pattern = "yyyy-MM-dd")
     public Date dateOfDelivered;

@@ -1,10 +1,10 @@
-@(requestForm: Form[views.formdata.MaterialIndentDataform])
+@(requestForm: Form[views.formdata.MaterialIndentDataform], user: User)
 
 @import helper._
 
 @main("Registration")(new ArrayList())(new ArrayList()) {
 
-    @form(routes.MaterialIndentController.makeRequest()) {
+    @form(routes.MaterialIndentController.makeRequest(user.id)) {
 
         @inputText(requestForm("productName"))
         @inputText(requestForm("category"))
