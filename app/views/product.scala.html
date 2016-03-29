@@ -31,8 +31,8 @@
         <tr class="product-listing category-@products(index).category">
             <td class="product-name">@products(index).productName</td>
             <td class="product-category">@products(index).category</td>
-            <td>@products(index).quantity</td>
-            <td>@products(index).getFormattedPrice()</td>
+            <td class="product-quantity" value="@products(index).quantity">@products(index).quantity</td>
+            <td class="product-price" value="@products(index).price">@products(index).getFormattedPrice()</td>
             <td><button class="buy-button" value="@products(index).id">Buy</button></td>
         </tr>
     }
@@ -53,6 +53,9 @@
     <div id="buy-confirmation-dialog">
         <input id="confirmation-quantity" type="number">
         <div id="buy-confirmation-dialog-txt"></div>
+    </div>
+    <div id="buy-error-dialog">
+        <div id="buy-error-dialog-txt"></div>
     </div>
 }
 

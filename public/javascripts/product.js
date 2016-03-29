@@ -12,6 +12,7 @@ $(document).ready(function() {
         }
     });
 
+    // Register the event handler that searches products.
     $('.search-button').click( function() {
         $('.product-listing').hide();
         // trim whitespace off the search text
@@ -31,10 +32,22 @@ $(document).ready(function() {
         });
     });
 
+    // Register the event handler that allows users to buy items.
     $('.buy-button').click( function() {
         var productId = $(this).val();
+        var currentBuyButton = this;
+
+        // Changes the state after the quantity of items is selected.
+        var quantitySelected = false;
+        var quantityAvailable = parseInt( $(this).parent().siblings('.product-quantity').first().attr('value') );
+        var quantity = 0;
+        var productPrice = '';
+
+        // set the default as 1
+        $('#confirmation-quantity').val(1);
+        $('#confirmation-quantity').show();
+
         console.log("Buying product with id: " + productId);
-        var productPrice = $(this).parent()
         $('#buy-confirmation-dialog-txt').text("Enter the quantity you'd like to purchase.");
         $('#buy-confirmation-dialog').dialog({
             modal: true,
@@ -42,7 +55,37 @@ $(document).ready(function() {
                 {
                     text: 'submit',
                     click : function() {
+                        if ( quantitySelected ) {
+                            $(this).dialog('close');
+                            // Make the post to buy the product.
+                            $.post(
+                                '/buy-product/'+productId+'/'+quantity,
+                                '',
+                                function( data ) {
+                                    // Refresh the page to display the change.
+                                    location.reload();
+                                },
+                                'json'
+                            )
+                        } else {
+                            quantity = parseInt( $('#confirmation-quantity').val() );
 
+                            // Make sure there are enough items available for purchase.
+                            if ( quantity > quantityAvailable ) {
+                                $(this).dialog('close');
+                                $('#buy-error-dialog-txt').text("There are not that many items available for purchase.");
+                                $('#buy-error-dialog').dialog({
+                                    modal: true
+                                });
+                            }
+
+                            console.log("Quantity: " + quantity);
+                            productPrice = parseInt($(currentBuyButton).parent().siblings('.product-price').first().attr('value'));
+                            console.log("Price: " + productPrice);
+                            $('#buy-confirmation-dialog-txt').text("This will cost "+centsToFormattedDollars( productPrice*quantity ) + '. Continue?');
+                            quantitySelected = true;
+                            $('#confirmation-quantity').hide();
+                        }
                     }
                 },
                 {

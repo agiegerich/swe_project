@@ -10,6 +10,7 @@ import models.Product;
 import play.Logger;
 import play.data.Form;
 import play.db.jpa.Transactional;
+import play.libs.Json;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
@@ -44,8 +45,25 @@ public class ProductController extends Controller {
 
         newProduct.save();
 
-        return redirect( routes.ProductController.list() );
+        return redirect(routes.ProductController.list());
 
+    }
+
+    public Result buyProduct(Long productId, int productQuantity) {
+        Optional<Product> potentialProduct = Product.findById( productId );
+
+        Map<String, Object> jsonObject = new HashMap<>();
+
+        if (!potentialProduct.isPresent()) {
+            Logger.error("No product with that ID!");
+            jsonObject.put("success", false);
+        } else {
+            Product product = potentialProduct.get();
+            product.quantity = product.quantity - productQuantity;
+            product.save();
+            jsonObject.put("success", true);
+        }
+        return ok( Json.toJson( jsonObject ) );
     }
 
 }

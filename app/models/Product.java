@@ -45,6 +45,12 @@ public class Product extends Model {
         return products;
     }
 
+    public static Optional<Product> findById(Long id) {
+        Product product = Product.find.where().eq("id", id).findUnique();
+        return product == null ? Optional.empty() : Optional.of( product );
+
+    }
+
     public static List<Product> findByCategory( String categoryToFind ) {
         List<Product> products = Product.find.where().eq( "category", categoryToFind ).findList();
         return products;

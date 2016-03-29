@@ -80,13 +80,13 @@ public class Application extends Controller {
     }
 
 
-    public Result sendBadRequest( String error ) {
+    public static Result sendBadRequest( String error ) {
         List<String> errorList = new ArrayList<>();
         errorList.add( error );
         return sendBadRequest( errorList );
     }
 
-    public Result sendBadRequest(List<String> errors) {
+    public static Result sendBadRequest(List<String> errors) {
         return badRequest( badRequest.render(errors) );
     }
 
