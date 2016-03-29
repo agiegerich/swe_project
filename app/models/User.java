@@ -24,25 +24,20 @@ public class User extends Model {
     
     @Required
     @MaxLength(50)
+    @Column(name="firstName")
     public String firstName;
 
     @Required
     @MaxLength(50)
+    @Column(name="lastName")
     public String lastName;
-    
-    /* TODO
-     * I think Aashay said we shouldn't have a company name.
-    @Required
-    @MaxLength(50)
-    public String companyName;
-    */
     
     @Required
     @Column(nullable=false)
     public Gender gender;
     
     @Required
-    @Column(nullable=false)
+    @Column(nullable=false, name="dateOfBirth")
     public Date dateOfBirth;
 
     @Required

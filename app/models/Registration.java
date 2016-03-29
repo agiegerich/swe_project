@@ -25,17 +25,17 @@ public class Registration extends Model {
 
     @Required
     @MaxLength(50)
-    @Column(nullable=false)
+    @Column(nullable=false, name="firstName")
     public String firstName;
 
     @Required
     @Formats.DateTime(pattern = "yyyy-MM-dd")
-    @Column(nullable=false)
+    @Column(nullable=false, name="dateOfBirth")
     public Date dateOfBirth;
 
     @Required
     @MaxLength(50)
-    @Column(nullable=false)
+    @Column(nullable=false, name="lastName")
     public String lastName;
 
     @Required
@@ -52,7 +52,7 @@ public class Registration extends Model {
     @Required
     @MinLength(6)
     @MaxLength(20)
-    @Column(nullable=false)
+    @Column(nullable=false, name="repeatPassword")
     public String repeatPassword;
     
     @Required
@@ -63,6 +63,7 @@ public class Registration extends Model {
     @Column(nullable=false)
     public Gender gender;
 
+    @Column(name="roleConfirmationId")
     public Integer roleConfirmationId;
 
     
