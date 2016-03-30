@@ -1,6 +1,8 @@
 'use strict';
 
 $(document).ready(function() {
+    $('#confirmation-quantity').hide();
+
     console.log('Setting up event handlers...')
     $('.category-selector').change( function() {
         var category = $(this).val();
@@ -74,6 +76,14 @@ $(document).ready(function() {
                             if ( quantity > quantityAvailable ) {
                                 $(this).dialog('close');
                                 $('#buy-error-dialog-txt').text("There are not that many items available for purchase.");
+                                $('#buy-error-dialog').dialog({
+                                    modal: true
+                                });
+                            }
+
+                            if ( quantity < 1 ) {
+                                $(this).dialog('close');
+                                $('#buy-error-dialog-txt').text("Quantity must be positive.");
                                 $('#buy-error-dialog').dialog({
                                     modal: true
                                 });

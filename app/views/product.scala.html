@@ -2,7 +2,7 @@
 
 @import helper._
 
-@main("Registration")( Arrays.asList("product") )( Arrays.asList("product") ) {
+@main("Products")( Arrays.asList("product") )( Arrays.asList("product") ) {
 
 
 <div class="category-selection-div">
@@ -28,34 +28,38 @@
         <th>Buy</th>
     </tr>
     @for( index <- 0 until products.size) {
-        <tr class="product-listing category-@products(index).category">
-            <td class="product-name">@products(index).productName</td>
-            <td class="product-category">@products(index).category</td>
-            <td class="product-quantity" value="@products(index).quantity">@products(index).quantity</td>
-            <td class="product-price" value="@products(index).price">@products(index).getFormattedPrice()</td>
-            <td><button class="buy-button" value="@products(index).id">Buy</button></td>
-        </tr>
+        @if( products(index).quantity > 0 ) {
+            <tr class="product-listing category-@products(index).category">
+                <td class="product-name">@products(index).productName</td>
+                <td class="product-category">@products(index).category</td>
+                <td class="product-quantity" value="@products(index).quantity">@products(index).quantity</td>
+                <td class="product-price" value="@products(index).price">@products(index).getFormattedPrice()</td>
+                <td><button class="buy-button" value="@products(index).id">Buy</button></td>
+            </tr>
+        }
     }
 </table>
+<div id="buy-confirmation-dialog">
+    <input id="confirmation-quantity" type="number">
+    <div id="buy-confirmation-dialog-txt"></div>
+</div>
+<div id="buy-error-dialog">
+    <div id="buy-error-dialog-txt"></div>
+</div>
 
-    @form(routes.ProductController.addProduct()) {
+    @if( false ) {
+        @form(routes.ProductController.addProduct()) {
 
-        @inputText(productForm("id"))
-        @inputText(productForm("productName"))
-        @inputText(productForm("category"))
-        @inputText(productForm("quantity"))
-        @inputText(productForm("price"))
+            @inputText(productForm("id"))
+            @inputText(productForm("productName"))
+            @inputText(productForm("category"))
+            @inputText(productForm("quantity"))
+            @inputText(productForm("price"))
 
-        <input type="submit" value="Create">
+            <input type="submit" value="Create">
+
+        }
 
     }
-
-    <div id="buy-confirmation-dialog">
-        <input id="confirmation-quantity" type="number">
-        <div id="buy-confirmation-dialog-txt"></div>
-    </div>
-    <div id="buy-error-dialog">
-        <div id="buy-error-dialog-txt"></div>
-    </div>
 }
 
