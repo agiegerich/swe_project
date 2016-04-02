@@ -8,6 +8,7 @@ import play.data.validation.Constraints.Required;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -50,6 +51,10 @@ public class User extends Model {
     @Column(nullable=false)
     public Role role;
 
+    @OneToMany(mappedBy="requester")
+    public List<MaterialIndent> materialIndents;
+
+
     
     public static Model.Finder<String, User> find = new Model.Finder<>(User.class);
 
@@ -57,7 +62,6 @@ public class User extends Model {
         User user = find.where().eq("email", email).findUnique();
         return user == null ? Optional.empty() : Optional.of( user );
     }
-
 
     public static User findById(Long id) {
         User user = User.find.where().eq("id", id).findUnique();
@@ -68,12 +72,10 @@ public class User extends Model {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        //this.companyName = companyName;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.password = password;
         this.role = role;
-        this.save();
     }
 
 }

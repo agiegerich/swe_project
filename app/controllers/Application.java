@@ -3,12 +3,12 @@ package controllers;
 import constants.R;
 import exceptions.EncryptorException;
 import exceptions.RoleConfirmationDoesNotExist;
+import models.Gender;
 import models.Registration;
 import models.Role;
 import models.User;
 import play.Logger;
 import play.data.Form;
-import play.db.jpa.Transactional;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
@@ -32,12 +32,93 @@ public class Application extends Controller {
     }
      */
 
-    public Result index() { 
-        return ok(index.render());
+    // Inserts test users into the database.
+    public void setup() {
+        if (!R.didSetup) {
+            Logger.info("Inserting test data into database...");
+            try {
+                String password = Encryptor.encrypt(R.AES_KEY, R.AES_IV, "password");
+
+                String admin1Email = "admin1@uiowa.edu";
+                if (!User.findByEmail(admin1Email).isPresent()) {
+                    User admin1 = new User(admin1Email, "Admin1", "Admin1", Gender.FEMALE, new Date(0), password
+                            , Role.ADMINISTRATOR);
+                    admin1.save();
+                }
+
+                String admin2Email = "admin2@uiowa.edu";
+                if (!User.findByEmail(admin2Email).isPresent()) {
+                    User admin2 = new User(admin2Email, "Admin2", "Admin2", Gender.MALE, new Date(0), password
+                            , Role.ADMINISTRATOR);
+                    admin2.save();
+                }
+
+                String user1Email = "user1@uiowa.edu";
+                if (!User.findByEmail(user1Email).isPresent()) {
+                    User user1 = new User(user1Email, "User1", "User1", Gender.FEMALE, new Date(0), password
+                            , Role.USER);
+                    user1.save();
+                }
+
+                String user2Email = "user2@uiowa.edu";
+                if (!User.findByEmail(user2Email).isPresent()) {
+                    User user2 = new User(user2Email, "User2", "User2", Gender.MALE, new Date(0), password
+                            , Role.USER);
+                    user2.save();
+                }
+
+                String manager1Email = "manager1@uiowa.edu";
+                if (!User.findByEmail(manager1Email).isPresent()) {
+                    User manager1 = new User(manager1Email, "Manager1", "Manager1", Gender.FEMALE, new Date(0), password
+                            , Role.MANAGER);
+                    manager1.save();
+                }
+
+                String manager2Email = "manager2@uiowa.edu";
+                if (!User.findByEmail(manager2Email).isPresent()) {
+                    User manager2 = new User(manager2Email, "Manager2", "Manager2", Gender.MALE, new Date(0), password
+                            , Role.MANAGER);
+                    manager2.save();
+                }
+
+                R.didSetup = true;
+            } catch (EncryptorException e) {
+                Logger.error("Failed to setup test accounts.");
+            }
+        }
+    }
+
+    public Result index() {
+        // setup test accounts
+        setup();
+        String email = session("email");
+        if (email == null) {
+            return login();
+        } else {
+            Optional<User> potentialUser = User.findByEmail(email);
+            if (!potentialUser.isPresent()) {
+                session().clear();
+                return sendBadRequest("Invalid Session");
+            }
+            return ok( welcome.render( potentialUser.get() ) );
+        }
+    }
+
+    public Result registration() {
+        String email = session("email");
+        if (email != null) {
+            return sendBadRequest("You must be logged out to register.");
+        }
+        return ok( registration.render() );
     }
 
     public Result login() {
         return ok(login.render(Form.form(Login.class)));
+    }
+
+    public Result logout() {
+        session().clear();
+        return index();
     }
 
     public Result postLogin() {
@@ -71,15 +152,17 @@ public class Application extends Controller {
         }
 
         session().clear();
-        session("email", formData.get().email);
-        return redirect(routes.Application.loginSuccess(user.id));
+        session("email", user.email);
+        return redirect(routes.Application.index());
     }
 
+    /*
     public Result loginSuccess(Long id) {
 
         User user = User.findById(id);
         return ok( loginSuccess.render(user) );
     }
+    */
 
 
     public static Result sendBadRequest( String error ) {
@@ -92,7 +175,6 @@ public class Application extends Controller {
         return badRequest( badRequest.render(errors) );
     }
 
-    @Transactional
     public Result registerUser() {
         Logger.info("Recieved registration request.");
 

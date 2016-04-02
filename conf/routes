@@ -4,7 +4,7 @@
 
 # Home page
 GET		/									            controllers.Application.index()
-GET     /registration                                   controllers.Application.index()
+GET     /registration                                   controllers.Application.registration()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                                   controllers.Assets.versioned(path="/public", file: Asset)
@@ -18,8 +18,8 @@ GET     /registration-confirmation/:uuid                controllers.Application.
 #Loggin
 GET 	/login 								            controllers.Application.login()
 POST 	/login 								            controllers.Application.postLogin()
+GET     /logout                                         controllers.Application.logout()
 
-GET     /login-success/:id 					        	controllers.Application.loginSuccess(id: Long)
 
 #PasswordChange
 GET		/reset-password						            controllers.Application.resetPassword()
@@ -29,8 +29,8 @@ POST 	/reset-password         			            controllers.Application.resetPasswo
 GET 	/reset-password/:email 				            controllers.Application.resetPasswordEmailSent(email: String)
 
 #MaterialIndent
-GET 	/material-indent 								controllers.MaterialIndentController.index(id: Long)
-POST 	/material-indent 								controllers.MaterialIndentController.makeRequest(id: Long)
+GET 	/material-indent 								controllers.MaterialIndentController.index()
+POST 	/material-indent 								controllers.MaterialIndentController.makeRequest()
 
 #Product
 GET		/product							            controllers.ProductController.list()

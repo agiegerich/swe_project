@@ -1,9 +1,0 @@
-@(user: User)
-
-@main("Login Success")(new ArrayList())(new ArrayList()) {
-    <h1>Welcome @user.firstName</h1>
-
-    <a href="@routes.ProductController.list" id="logo"><span>Search Product</span></a>
-    <br>
-    <a href="@routes.MaterialIndentController.index(user.id)" id="logo"><span>Make A Request</span></a>
-}

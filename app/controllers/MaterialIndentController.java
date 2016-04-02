@@ -1,51 +1,68 @@
 package controllers;
 
-import constants.R;
-import exceptions.EncryptorException;
-import exceptions.RoleConfirmationDoesNotExist;
-import models.Registration;
-import models.Role;
-import models.User;
-import models.Product;
 import models.MaterialIndent;
+import models.Product;
+import models.User;
 import play.Logger;
 import play.data.Form;
-import play.db.jpa.Transactional;
-import play.libs.Json;
-import play.libs.mailer.Email;
-import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.*;
 import views.formdata.MaterialIndentDataform;
+import views.html.materialIndent;
 
-import java.util.*;
-import java.security.SecureRandom;
-import java.math.BigInteger;
+import java.util.Optional;
 
 public class MaterialIndentController extends Controller {
 
     final Form<MaterialIndentDataform> requestForm = Form.form(MaterialIndentDataform.class);
 
-    public Result index(Long id) {
+    public Result index() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
 
-        User user = User.findById(id);
-        return ok(materialIndent.render(requestForm, user));
+        Logger.debug("Size of material request indents: " + user.get().materialIndents.size());
+
+        return ok(materialIndent.render(requestForm, user.get().materialIndents.get(0).requestedProduct.getName() ) );
     }
 
-    public Result makeRequest(Long id) {
-
-        User user = User.findById(id);
+    public Result makeRequest() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
 
         Form<MaterialIndentDataform> formData = Form.form(MaterialIndentDataform.class).bindFromRequest();
 
         MaterialIndentDataform materialIndent = formData.get();
 
-        MaterialIndent newMaterialIndent = new MaterialIndent(user, materialIndent.productName, materialIndent.category, materialIndent.quantity);
+        // If this product does not already exist create a new empty product;
+        Product product = null;
+        Optional<Product> potentialProduct = Product.findSpecific(materialIndent.productName, materialIndent.category, materialIndent.price);
+        if (!potentialProduct.isPresent()) {
+            // quantity should be 0 since the material indent quantity can't be added until after inspection.
+            product = new Product(materialIndent.productName, materialIndent.category, 0, materialIndent.price);
+            product.save();
+        } else {
+            product = potentialProduct.get();
+        }
 
+
+        MaterialIndent newMaterialIndent = new MaterialIndent(user.get(), product, materialIndent.quantity);
         newMaterialIndent.save();
 
-        return redirect(routes.MaterialIndentController.index(id));
+        return redirect(routes.MaterialIndentController.index());
     }
 
 }

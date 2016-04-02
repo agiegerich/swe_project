@@ -8,4 +8,5 @@ public class MaterialIndentDataform {
 
     public Integer quantity;
 
+    public Long price;
 }

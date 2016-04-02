@@ -11,8 +11,14 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
 import java.util.List;
+import java.util.Set;
 
 @Entity
+// Make it so  there cannot be a single product with the same name and price and category.
+@Table(
+        uniqueConstraints=
+        @UniqueConstraint(columnNames={"name", "price", "category"})
+)
 public class Product extends Model {
 
 	@Id
@@ -21,8 +27,8 @@ public class Product extends Model {
 
     @Required
     @MaxLength(50)
-    @Column(name="productName", nullable = false)
-    public String productName;
+    @Column(name="name", nullable = false)
+    public String name;
 
     @Required
     @MaxLength(50)
@@ -38,11 +44,28 @@ public class Product extends Model {
     @Column(nullable=false)
     public Long price;
 
+    @ManyToOne
+    public Vendor preferredVendor;
+
+    @OneToMany(mappedBy="requestedProduct")
+    public List<MaterialIndent> materialIndents;
+
+    @ManyToMany
+    @JoinTable(name="product_alternate_associations",
+                    joinColumns = @JoinColumn(name="product_a", referencedColumnName="id"),
+                    inverseJoinColumns = @JoinColumn(name="product_b", referencedColumnName = "id"))
+    public List<Product> alternates;
+
     public static Model.Finder<String, Product> find = new Model.Finder<>(Product.class);
 
     public static List<Product> findAll(){
         List<Product> products = Product.find.all();
         return products;
+    }
+
+    public static Optional<Product> findSpecific(String name, String category, Long price) {
+        Product product = Product.find.where().eq("name", name).eq("category", category).eq("price", price).findUnique();
+        return product == null ? Optional.empty() : Optional.of( product );
     }
 
     public static Optional<Product> findById(Long id) {
@@ -56,12 +79,12 @@ public class Product extends Model {
         return products;
     }
 
-    public long getId(){
+    public long getId() {
         return this.id;
     }
 
-    public String getProductName(){
-        return this.productName;
+    public String getName(){
+        return this.name;
     }
 
     public String getCategory() {
@@ -76,9 +99,8 @@ public class Product extends Model {
         return Util.formatLongAsDollars( this.price );
     }
 
-    public Product(long id, String productName, String category, Integer quantity, Long price){
-        this.id = id;
-        this.productName = productName;
+    public Product(String productName, String category, Integer quantity, Long price){
+        this.name = productName;
         this.category = category;
         this.quantity = quantity;
         this.price = price;

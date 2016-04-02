@@ -2,16 +2,10 @@ package models;
 
 import com.avaje.ebean.Model;
 import play.data.format.Formats;
-import controllers.Util;
-import play.data.validation.Constraints.Email;
-import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Optional;
-import java.util.List;
 
 @Entity
 public class MaterialIndent extends Model {
@@ -21,37 +15,34 @@ public class MaterialIndent extends Model {
     public Long id;
 
     @Required
-    @ManyToOne
+    @ManyToOne()
+    @Column(nullable=false)
     public User requester;
 
     @Required
-    @MaxLength(50)
-    @Column(name="productName", nullable = false)
-    public String productName;
+    @ManyToOne()
+    @Column(nullable=false)
+    public PurchaseOrder purchaseOrder;
 
     @Required
-    @MaxLength(50)
+    @ManyToOne()
     @Column(nullable=false)
-    public String category;
+    public Product requestedProduct;
 
     @Required
-    @Column(nullable=false)
-    public Integer quantity;
-/*
-    @OneToMany
-    public List<Inspection> inspections;
-*/
+    @Column(nullable=true)
+    public Integer requestedQuantity;
+
     @Column(name="dateOfDelivered")
     @Formats.DateTime(pattern = "yyyy-MM-dd")
     public Date dateOfDelivered;
 
     public static Model.Finder<String, MaterialIndent> find = new Model.Finder<>(MaterialIndent.class);
 
-    public MaterialIndent(User user, String productName, String category, Integer quantity) {
+    public MaterialIndent(User user, Product product, Integer quantity) {
         this.requester = user;
-        this.productName = productName;
-        this.category = category;
-        this.quantity = quantity;
+        this.requestedProduct = product;
+        this.requestedQuantity = quantity;
     }
 
 }
