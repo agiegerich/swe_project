@@ -48,7 +48,7 @@ public class Product extends Model {
     public Vendor preferredVendor;
 
     @OneToMany(mappedBy="requestedProduct")
-    public List<MaterialIndent> materialIndents;
+    public List<Request> requests;
 
     @ManyToMany
     @JoinTable(name="product_alternate_associations",

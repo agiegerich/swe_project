@@ -1,6 +1,6 @@
 package views.formdata;
 
-public class MaterialIndentDataform {
+public class RequestDataform {
 
     public String productName;
 

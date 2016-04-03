@@ -16,6 +16,6 @@ public class PurchaseOrder extends Model {
 
 
     @OneToMany(mappedBy = "purchaseOrder")
-    public List<MaterialIndent> materialIndents;
+    public List<Request> requests;
 
 }

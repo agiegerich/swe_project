@@ -1,20 +1,20 @@
 package controllers;
 
-import models.MaterialIndent;
+import models.Request;
 import models.Product;
 import models.User;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.formdata.MaterialIndentDataform;
-import views.html.materialIndent;
+import views.formdata.RequestDataform;
+import views.html.request;
 
 import java.util.Optional;
 
-public class MaterialIndentController extends Controller {
+public class RequestController extends Controller {
 
-    final Form<MaterialIndentDataform> requestForm = Form.form(MaterialIndentDataform.class);
+    final Form<RequestDataform> requestForm = Form.form(RequestDataform.class);
 
     public Result index() {
         String email = session("email");
@@ -27,9 +27,9 @@ public class MaterialIndentController extends Controller {
             return Application.sendBadRequest("Invalid Session");
         }
 
-        Logger.debug("Size of material request indents: " + user.get().materialIndents.size());
+        Logger.debug("Size of material request indents: " + user.get().requests.size());
 
-        return ok(materialIndent.render(requestForm, user.get().materialIndents.get(0).requestedProduct.getName() ) );
+        return ok(request.render(requestForm, user.get()));
     }
 
     public Result makeRequest() {
@@ -43,26 +43,26 @@ public class MaterialIndentController extends Controller {
             return Application.sendBadRequest("Invalid Session");
         }
 
-        Form<MaterialIndentDataform> formData = Form.form(MaterialIndentDataform.class).bindFromRequest();
+        Form<RequestDataform> formData = Form.form(RequestDataform.class).bindFromRequest();
 
-        MaterialIndentDataform materialIndent = formData.get();
+        RequestDataform request = formData.get();
 
         // If this product does not already exist create a new empty product;
         Product product = null;
-        Optional<Product> potentialProduct = Product.findSpecific(materialIndent.productName, materialIndent.category, materialIndent.price);
+        Optional<Product> potentialProduct = Product.findSpecific(request.productName, request.category, request.price);
         if (!potentialProduct.isPresent()) {
             // quantity should be 0 since the material indent quantity can't be added until after inspection.
-            product = new Product(materialIndent.productName, materialIndent.category, 0, materialIndent.price);
+            product = new Product(request.productName, request.category, 0, request.price);
             product.save();
         } else {
             product = potentialProduct.get();
         }
 
 
-        MaterialIndent newMaterialIndent = new MaterialIndent(user.get(), product, materialIndent.quantity);
-        newMaterialIndent.save();
+        Request newRequest = new Request(user.get(), product, request.quantity);
+        newRequest.save();
 
-        return redirect(routes.MaterialIndentController.index());
+        return redirect(routes.RequestController.index());
     }
 
 }
