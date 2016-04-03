@@ -1,0 +1,19 @@
+@(items: List[models.CartItem])
+
+@main("Shopping Cart")( new ArrayList() )( new ArrayList() ) {
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+    </tr>
+    @for( index <- 0 until items.size) {
+        @if( items(index).quantityInCart > 0 ) {
+            <tr class="product-listing">
+                <td class="product-name">@items(index).getProduct().getName()</td>
+                <td class="product-quantity" value="@items(index).quantityInCart">@items(index).quantityInCart</td>
+            </tr>
+        }
+    }
+</table>
+
+}
