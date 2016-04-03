@@ -57,19 +57,9 @@ $(document).ready(function() {
                 {
                     text: 'submit',
                     click : function() {
-                        if ( quantitySelected ) {
-                            $(this).dialog('close');
-                            // Make the post to buy the product.
-                            $.post(
-                                '/buy-product/'+productId+'/'+quantity,
-                                '',
-                                function( data ) {
-                                    // Refresh the page to display the change.
-                                    location.reload();
-                                },
-                                'json'
-                            )
-                        } else {
+
+/*                        if ( quantitySelected ) {*/
+/*                        } else {*/
                             quantity = parseInt( $('#confirmation-quantity').val() );
 
                             // Make sure there are enough items available for purchase.
@@ -93,9 +83,23 @@ $(document).ready(function() {
                             productPrice = parseInt($(currentBuyButton).parent().siblings('.product-price').first().attr('value'));
                             console.log("Price: " + productPrice);
                             $('#buy-confirmation-dialog-txt').text("This will cost "+centsToFormattedDollars( productPrice*quantity ) + '. Continue?');
-                            quantitySelected = true;
+                            //quantitySelected = true;
                             $('#confirmation-quantity').hide();
-                        }
+
+                            $(this).dialog('close');
+                            // Make the post to buy the product.
+                            console.log("making post to add-to-cart");
+                            $.post(
+                                '/add-to-cart/'+productId+'/'+quantity,
+                                '',
+                                function( data ) {
+                                    // Refresh the page to display the change.
+                                    location.reload();
+                                },
+                                'json'
+                            )
+/*                        }*/
+
                     }
                 },
                 {

@@ -88,6 +88,20 @@ public class Application extends Controller {
         }
     }
 
+    public Result shoppingCart() {
+        String email = session("email");
+        if (email == null) {
+            sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
+
+        return ok( shoppingCart.render( user.get().getShoppingCart() ) );
+    }
+
     public Result index() {
         // setup test accounts
         setup();

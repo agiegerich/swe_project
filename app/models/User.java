@@ -7,6 +7,7 @@ import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,13 @@ public class User extends Model {
     @OneToMany(mappedBy="requester")
     public List<MaterialIndent> materialIndents;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<CartItem> shoppingCart;
 
+
+    public List<CartItem> getShoppingCart() {
+        return shoppingCart;
+    }
     
     public static Model.Finder<String, User> find = new Model.Finder<>(User.class);
 
@@ -76,6 +83,7 @@ public class User extends Model {
         this.dateOfBirth = dateOfBirth;
         this.password = password;
         this.role = role;
+        shoppingCart = new ArrayList<>();
     }
 
 }

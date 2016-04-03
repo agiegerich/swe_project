@@ -1,7 +1,9 @@
 package controllers;
 
 import constants.R;
+import models.CartItem;
 import models.Product;
+import models.User;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -38,7 +40,7 @@ public class ProductController extends Controller {
     }
 
     public Result buyProduct(Long productId, int productQuantity) {
-        Optional<Product> potentialProduct = Product.findById( productId );
+        Optional<Product> potentialProduct = Product.findById(productId);
 
         Map<String, Object> jsonObject = new HashMap<>();
 
@@ -50,6 +52,28 @@ public class ProductController extends Controller {
             product.quantity = product.quantity - productQuantity;
             product.save();
             jsonObject.put("success", true);
+        }
+        return ok(Json.toJson(jsonObject));
+    }
+
+    public Result addToCart(Long productId, int productQuantity) {
+        Logger.debug("POST for addToCart");
+        Optional<Product> potentialProduct = Product.findById( productId );
+
+        Map<String, Object> jsonObject = new HashMap<>();
+
+        String email = session("email");
+
+        if (!potentialProduct.isPresent()) {
+            Logger.error("No product with that ID!");
+            jsonObject.put("success", false);
+        } else {
+            Logger.debug("addToCart: " + email);
+            Optional<User> optUser = User.findByEmail(email);
+            User user = optUser.get();
+            CartItem cartItem = new CartItem(Product.findById( productId ).get(), productQuantity);
+            user.getShoppingCart().add(cartItem);
+            user.save();
         }
         return ok( Json.toJson( jsonObject ) );
     }

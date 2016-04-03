@@ -32,8 +32,11 @@ GET 	/reset-password/:email 				            controllers.Application.resetPasswor
 GET 	/material-indent 								controllers.MaterialIndentController.index()
 POST 	/material-indent 								controllers.MaterialIndentController.makeRequest()
 
+GET     /shopping-cart                                  controllers.Application.shoppingCart()
+
 #Product
 GET		/product							            controllers.ProductController.list()
 POST 	/product 							            controllers.ProductController.addProduct()
 
 POST    /buy-product/:productId/:productQuantity       controllers.ProductController.buyProduct( productId: Long, productQuantity: Integer )
+POST    /add-to-cart/:productId/:productQuantity       controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
