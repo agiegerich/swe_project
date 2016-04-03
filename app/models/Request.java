@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class MaterialIndent extends Model {
+public class Request extends Model {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -37,9 +37,9 @@ public class MaterialIndent extends Model {
     @Formats.DateTime(pattern = "yyyy-MM-dd")
     public Date dateOfDelivered;
 
-    public static Model.Finder<String, MaterialIndent> find = new Model.Finder<>(MaterialIndent.class);
+    public static Model.Finder<String, Request> find = new Model.Finder<>(Request.class);
 
-    public MaterialIndent(User user, Product product, Integer quantity) {
+    public Request(User user, Product product, Integer quantity) {
         this.requester = user;
         this.requestedProduct = product;
         this.requestedQuantity = quantity;

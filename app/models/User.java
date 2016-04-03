@@ -53,7 +53,7 @@ public class User extends Model {
     public Role role;
 
     @OneToMany(mappedBy="requester")
-    public List<MaterialIndent> materialIndents;
+    public List<Request> requests;
 
     @OneToMany(cascade = CascadeType.ALL)
     public List<CartItem> shoppingCart;
