@@ -12,6 +12,10 @@ import play.mvc.Result;
 import views.formdata.RequestDataform;
 import views.html.request;
 import views.html.requestList;
+import views.html.inspection;
+import views.html.addProduct;
+import views.html.requestHistory;
+import views.formdata.AddProductDataform;
 
 import java.util.Optional;
 import java.util.Calendar;
@@ -120,6 +124,93 @@ public class RequestController extends Controller {
         request.save();
 
         return redirect(routes.RequestController.list());
+    }
+
+    public Result myRequest() {
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+
+
+        return ok(inspection.render(Request.findCurrentByRequester(user.get()), R.categories, user.get()));
+    }
+
+    public Result confirm(Long id) {
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        Request request = Request.findById(id).get();
+
+        if (request.requester.id != user.get().id) {
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        return ok(addProduct.render(request, R.categories, Form.form(AddProductDataform.class)));
+    }
+
+    public Result addFeedback(Long id) {
+
+        Form<AddProductDataform> formData = Form.form(AddProductDataform.class).bindFromRequest();
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        Request request = Request.findById(id).get();
+
+        if (request.requester.id != user.get().id) {
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        request.acceptedQuantity = formData.get().acceptedQuantity;
+        request.feedback = formData.get().feedback;
+        request.deliveryDate = Calendar.getInstance().getTime();
+        request.done = true;
+
+        request.save();
+
+        Product newProduct = new Product(request.productName, request.category, request.acceptedQuantity, formData.get().price);
+
+        newProduct.save();
+
+        return ok(inspection.render(Request.findCurrentByRequester(user.get()), R.categories, user.get()));
+    }
+
+    public Result requestHistory() {
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        return ok(requestHistory.render(Request.findClosedByRequester(user.get()), R.categories, user.get()));
     }
 
 }

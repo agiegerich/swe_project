@@ -33,6 +33,10 @@ GET 	/request 		 								controllers.RequestController.index()
 POST 	/request 		 								controllers.RequestController.makeRequest()
 GET 	/requestlist 									controllers.RequestController.list()
 POST 	/requestlist 									controllers.RequestController.ship(id: Long)
+GET 	/myrequest 										controllers.RequestController.myRequest()
+GET 	/confirm/:id 									controllers.RequestController.confirm(id: Long)
+POST 	/confirm 										controllers.RequestController.addFeedback(id: Long)
+GET 	/requesthistory 								controllers.RequestController.requestHistory()
 
 GET     /shopping-cart                                  controllers.Application.shoppingCart()
 
