@@ -8,6 +8,7 @@
 <table>
     <tr>
         <th>Request ID</th>
+        <th>Supplier</th>
         <th>Product Name</th>
         <th>Category</th>
         <th>Quantity</th>
@@ -20,6 +21,7 @@
         @if(requests(index).operator == null) {
                 <tr class="request-listing category-@requests(index).category">
                     <td class="request-id">@requests(index).id</td>
+                    <td class="request-supplier">@requests(index).supplier</td>
                     <td class="request-productName">@requests(index).productName</td>
                     <td class="request-category">@requests(index).category</td>
                     <td class="request-quantity" value="@requests(index).requestedQuantity">@requests(index).requestedQuantity</td>
@@ -31,6 +33,7 @@
             @helper.form(routes.RequestController.confirm(requests(index).id)){
                 <tr class="request-listing category-@requests(index).category">
                     <td class="request-id">@requests(index).id</td>
+                    <td class="request-supplier">@requests(index).supplier</td>
                     <td class="request-productName">@requests(index).productName</td>
                     <td class="request-category">@requests(index).category</td>
                     <td class="request-quantity" value="@requests(index).requestedQuantity">@requests(index).requestedQuantity</td>

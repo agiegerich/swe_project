@@ -55,7 +55,7 @@ public class RequestController extends Controller {
 
         RequestDataform request = formData.get();
 
-        Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity);
+        Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity, request.supplier);
 
         newRequest.save();
 

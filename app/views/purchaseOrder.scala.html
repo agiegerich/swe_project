@@ -1,8 +1,8 @@
-@(requests: List[models.Request], categories: List[String], user: User)
+@(requests: List[models.Request], requestForm: Form[views.formdata.RequestDataform], user: User)
 
 @import helper._
 
-@main("See Posted Requests")( Arrays.asList("request") )( Arrays.asList("request") ) {
+@main("Purchase Order")( Arrays.asList("purchaseOrder") )( Arrays.asList("purchaseOrder") ) {
 
 
 <table>
@@ -31,12 +31,16 @@
         }
     }
 </table>
-<div id="buy-confirmation-dialog">
-    <input id="confirmation-quantity" type="number">
-    <div id="buy-confirmation-dialog-txt"></div>
-</div>
-<div id="buy-error-dialog">
-    <div id="buy-error-dialog-txt"></div>
-</div>
+    @form(routes.PurchaseController.addRequestToOrder()) {
+
+        @inputText(requestForm("supplier"))
+        @inputText(requestForm("productName"))
+        @inputText(requestForm("category"))
+        @inputText(requestForm("quantity"))
+        @inputText(requestForm("price"))
+
+        <input type="submit" value="Add Request">
+
+    }
 
 }

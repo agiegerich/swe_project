@@ -28,6 +28,10 @@ public class Request extends Model {
 
     @Required
     @Column(nullable=false)
+    public String supplier;
+
+    @Required
+    @Column(nullable=false)
     public boolean done;
 
     @Required
@@ -37,12 +41,12 @@ public class Request extends Model {
     @Required
     @Column(nullable=false)
     public String category;
-/*
+
     @Required
     @ManyToOne()
     @Column(nullable=false, name="purchaseOrder")
     public PurchaseOrder purchaseOrder;
-*/
+
     @Required
     @Column(nullable=true, name="requestedQuantity")
     public int requestedQuantity;
@@ -94,12 +98,13 @@ public class Request extends Model {
         return requests;
     }
 
-    public Request(User user, String productName, String category, int requestedQuantity) {
+    public Request(User user, String productName, String category, int requestedQuantity, String supplier) {
         this.requester = user;
         this.done = false;
         this.productName = productName;
         this.category = category;
         this.requestedQuantity = requestedQuantity;
+        this.supplier = supplier;
     }
 
 }

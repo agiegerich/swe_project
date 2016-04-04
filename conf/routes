@@ -46,3 +46,8 @@ POST 	/product 							            controllers.ProductController.addProduct()
 
 POST    /buy-product/:productId/:productQuantity       controllers.ProductController.buyProduct( productId: Long, productQuantity: Integer )
 POST    /add-to-cart/:productId/:productQuantity       controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
+
+#PurchaseOrder
+GET		/purchase-order									controllers.PurchaseController.index()
+POST    /purchase-order									controllers.PurchaseController.makeOrder()
+POST    /purchase-order									controllers.PurchaseController.addRequestToOrder()

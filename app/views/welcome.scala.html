@@ -6,8 +6,10 @@
     <br>
     <a href="@routes.ProductController.list" class="logo"><span>Search Product</span></a>
     <br>
-    <a>Request Management</a>
-    <br>
+    @if(user.role == Role.MANAGER || user.role == Role.ADMINISTRATOR) {
+        <a>Request Management</a>
+        <br>
+    }
     @if(user.role == Role.MANAGER) {
         <a href="@routes.RequestController.index" class="logo"><span>Make A Request</span></a>
         <br>
@@ -15,6 +17,13 @@
         <br>
         <a href="@routes.RequestController.requestHistory" class="logo"><span>Request History</span></a>
         <br>
+        <a>Order Management</a>
+        <br>
+        <a href="@routes.PurchaseController.makeOrder" class="logo"><span>Make an Order</span></a>
+        <br>
+        <a href="">View Ongoing Orders</a>
+        <br>
+        <a href="">View Order History</a>
     }
     @if(user.role == Role.ADMINISTRATOR) {
     	<a href="@routes.RequestController.list" class="logo"><span>See Posted Request</span></a>
