@@ -57,28 +57,16 @@ $(document).ready(function() {
                 {
                     text: 'submit',
                     click : function() {
+                        quantity = parseInt( $('#confirmation-quantity').val() );
 
-/*                        if ( quantitySelected ) {*/
-/*                        } else {*/
-                            quantity = parseInt( $('#confirmation-quantity').val() );
-
-                            // Make sure there are enough items available for purchase.
-                            if ( quantity > quantityAvailable ) {
-                                $(this).dialog('close');
-                                $('#buy-error-dialog-txt').text("There are not that many items available for purchase.");
-                                $('#buy-error-dialog').dialog({
-                                    modal: true
-                                });
-                            }
-
-                            if ( quantity < 1 ) {
-                                $(this).dialog('close');
-                                $('#buy-error-dialog-txt').text("Quantity must be positive.");
-                                $('#buy-error-dialog').dialog({
-                                    modal: true
-                                });
-                            }
-
+                        // Make sure there are enough items available for purchase.
+                        if ( quantity < 1 ) {
+                            $(this).dialog('close');
+                            $('#buy-error-dialog-txt').text("Quantity must be positive.");
+                            $('#buy-error-dialog').dialog({
+                                modal: true
+                            });
+                        } else {
                             console.log("Quantity: " + quantity);
                             productPrice = parseInt($(currentBuyButton).parent().siblings('.product-price').first().attr('value'));
                             console.log("Price: " + productPrice);
@@ -97,9 +85,8 @@ $(document).ready(function() {
                                     location.reload();
                                 },
                                 'json'
-                            )
-/*                        }*/
-
+                            );
+                        }
                     }
                 },
                 {

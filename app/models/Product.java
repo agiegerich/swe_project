@@ -95,6 +95,10 @@ public class Product extends Model {
         return this.quantity;
     }
 
+    public Long getPrice() {
+        return this.price;
+    }
+
     public String getFormattedPrice() {
         return Util.formatLongAsDollars( this.price );
     }

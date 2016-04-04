@@ -3,10 +3,7 @@ package controllers;
 import constants.R;
 import exceptions.EncryptorException;
 import exceptions.RoleConfirmationDoesNotExist;
-import models.Gender;
-import models.Registration;
-import models.Role;
-import models.User;
+import models.*;
 import play.Logger;
 import play.data.Form;
 import play.libs.mailer.Email;
@@ -32,59 +29,106 @@ public class Application extends Controller {
     }
      */
 
-    // Inserts test users into the database.
     public void setup() {
         if (!R.didSetup) {
-            Logger.info("Inserting test data into database...");
             try {
-                String password = Encryptor.encrypt(R.AES_KEY, R.AES_IV, "password");
-
-                String admin1Email = "admin1@uiowa.edu";
-                if (!User.findByEmail(admin1Email).isPresent()) {
-                    User admin1 = new User(admin1Email, "Admin1", "Admin1", Gender.FEMALE, new Date(0), password
-                            , Role.ADMINISTRATOR);
-                    admin1.save();
-                }
-
-                String admin2Email = "admin2@uiowa.edu";
-                if (!User.findByEmail(admin2Email).isPresent()) {
-                    User admin2 = new User(admin2Email, "Admin2", "Admin2", Gender.MALE, new Date(0), password
-                            , Role.ADMINISTRATOR);
-                    admin2.save();
-                }
-
-                String user1Email = "user1@uiowa.edu";
-                if (!User.findByEmail(user1Email).isPresent()) {
-                    User user1 = new User(user1Email, "User1", "User1", Gender.FEMALE, new Date(0), password
-                            , Role.USER);
-                    user1.save();
-                }
-
-                String user2Email = "user2@uiowa.edu";
-                if (!User.findByEmail(user2Email).isPresent()) {
-                    User user2 = new User(user2Email, "User2", "User2", Gender.MALE, new Date(0), password
-                            , Role.USER);
-                    user2.save();
-                }
-
-                String manager1Email = "manager1@uiowa.edu";
-                if (!User.findByEmail(manager1Email).isPresent()) {
-                    User manager1 = new User(manager1Email, "Manager1", "Manager1", Gender.FEMALE, new Date(0), password
-                            , Role.MANAGER);
-                    manager1.save();
-                }
-
-                String manager2Email = "manager2@uiowa.edu";
-                if (!User.findByEmail(manager2Email).isPresent()) {
-                    User manager2 = new User(manager2Email, "Manager2", "Manager2", Gender.MALE, new Date(0), password
-                            , Role.MANAGER);
-                    manager2.save();
-                }
-
+                setupTestUsers();
+                setupTestProducts();
                 R.didSetup = true;
             } catch (EncryptorException e) {
-                Logger.error("Failed to setup test accounts.");
+                Logger.error("Failed to setup test data.");
             }
+        }
+    }
+
+    public void setupTestProducts() {
+
+        String mustangName = "Ford Mustang";
+        String automotiveCategory = "automotive";
+        Long mustangPrice = new Long(3500000);
+        if ( !Product.findSpecific(mustangName, automotiveCategory, mustangPrice).isPresent() ) {
+            Product mustang = new Product(mustangName, automotiveCategory, 1, mustangPrice);
+            mustang.save();
+        }
+
+        String mclarenName = "McLaren F1";
+        Long mclarenPrice = new Long(60000000);
+        if ( !Product.findSpecific(mclarenName, automotiveCategory, mclarenPrice).isPresent() ) {
+            Product mclaren = new Product(mclarenName, automotiveCategory, 1, mclarenPrice );
+            mclaren.save();
+        }
+
+
+        String shirtName = "an old t-shirt";
+        String clothingCategory = "clothing";
+        Long shirtPrice = new Long(500);
+        if (!Product.findSpecific(shirtName, clothingCategory, shirtPrice).isPresent() ) {
+            Product shirt = new Product(shirtName, clothingCategory, 5, shirtPrice);
+            shirt.save();
+        }
+
+        String sockName = "a sock";
+        Long sockPrice = new Long(100);
+        if ( !Product.findSpecific(sockName, clothingCategory, sockPrice).isPresent() ) {
+            Product sock = new Product(sockName, clothingCategory, 3, sockPrice);
+            sock.save();
+        }
+
+        String tvName = "flat screen TV";
+        String electronicsCategory = "electronics";
+        Long tvPrice = new Long(500000);
+        if ( !Product.findSpecific(tvName, electronicsCategory, tvPrice).isPresent() ) {
+            Product tv = new Product("flat screen TV", electronicsCategory, 10, tvPrice);
+            tv.save();
+        }
+
+        String computerName = "computer";
+        Long computerPrice = new Long(40000);
+        if ( !Product.findSpecific(computerName, electronicsCategory, computerPrice).isPresent() ) {
+            Product computer = new Product(computerName, electronicsCategory, 11, computerPrice);
+            computer.save();
+        }
+    }
+
+    // Inserts test users into the database.
+    public void setupTestUsers() throws EncryptorException {
+        Logger.info("Inserting test data into database...");
+        String password = Encryptor.encrypt(R.AES_KEY, R.AES_IV, "password");
+        String admin1Email = "admin1@uiowa.edu";
+        if (!User.findByEmail(admin1Email).isPresent()) {
+            User admin1 = new User(admin1Email, "Admin1", "Admin1", Gender.FEMALE, new Date(0), password
+                    , Role.ADMINISTRATOR);
+            admin1.save();
+        }
+        String admin2Email = "admin2@uiowa.edu";
+        if (!User.findByEmail(admin2Email).isPresent()) {
+            User admin2 = new User(admin2Email, "Admin2", "Admin2", Gender.MALE, new Date(0), password
+                    , Role.ADMINISTRATOR);
+            admin2.save();
+        }
+        String user1Email = "user1@uiowa.edu";
+        if (!User.findByEmail(user1Email).isPresent()) {
+            User user1 = new User(user1Email, "User1", "User1", Gender.FEMALE, new Date(0), password
+                    , Role.USER);
+            user1.save();
+        }
+        String user2Email = "user2@uiowa.edu";
+        if (!User.findByEmail(user2Email).isPresent()) {
+            User user2 = new User(user2Email, "User2", "User2", Gender.MALE, new Date(0), password
+                    , Role.USER);
+            user2.save();
+        }
+        String manager1Email = "manager1@uiowa.edu";
+        if (!User.findByEmail(manager1Email).isPresent()) {
+            User manager1 = new User(manager1Email, "Manager1", "Manager1", Gender.FEMALE, new Date(0), password
+                    , Role.MANAGER);
+            manager1.save();
+        }
+        String manager2Email = "manager2@uiowa.edu";
+        if (!User.findByEmail(manager2Email).isPresent()) {
+            User manager2 = new User(manager2Email, "Manager2", "Manager2", Gender.MALE, new Date(0), password
+                    , Role.MANAGER);
+            manager2.save();
         }
     }
 
@@ -99,7 +143,16 @@ public class Application extends Controller {
             return sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
 
-        return ok( shoppingCart.render( user.get().getShoppingCart() ) );
+        // If items have been purchased that were in the users shopping cart, subtract from the number of items in the
+        // shopping cart.
+        for ( CartItem item : user.get().getShoppingCart() ) {
+            if (item.quantityInCart > item.getProduct().getQuantity() ) {
+                item.quantityInCart = item.getProduct().getQuantity();
+                item.save();
+            }
+        }
+
+        return ok(shoppingCart.render(user.get().getShoppingCart()));
     }
 
     public Result index() {
