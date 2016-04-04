@@ -14,8 +14,8 @@ public class PurchaseOrder extends Model {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     public Long id;
 
-
+/*
     @OneToMany(mappedBy = "purchaseOrder")
     public List<Request> requests;
-
+*/
 }

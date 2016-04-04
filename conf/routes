@@ -28,9 +28,11 @@ POST 	/reset-password         			            controllers.Application.resetPasswo
 
 GET 	/reset-password/:email 				            controllers.Application.resetPasswordEmailSent(email: String)
 
-#MaterialIndent
+#Request
 GET 	/request 		 								controllers.RequestController.index()
 POST 	/request 		 								controllers.RequestController.makeRequest()
+GET 	/requestlist 									controllers.RequestController.list()
+POST 	/requestlist 									controllers.RequestController.ship(id: Long)
 
 GET     /shopping-cart                                  controllers.Application.shoppingCart()
 

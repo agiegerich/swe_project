@@ -5,12 +5,18 @@ import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 
 import javax.persistence.*;
+import java.util.Optional;
 import java.util.Date;
+import java.util.List;
+
+/*
+    Request model is the Material Indent model
+*/
 
 @Entity
 public class Request extends Model {
 
-	@Id
+    @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Long id;
 
@@ -20,29 +26,57 @@ public class Request extends Model {
     public User requester;
 
     @Required
-    @ManyToOne()
+    @Column(nullable=false, name="productName")
+    public String productName;
+
+    @Required
     @Column(nullable=false)
+    public String category;
+/*
+    @Required
+    @ManyToOne()
+    @Column(nullable=false, name="purchaseOrder")
     public PurchaseOrder purchaseOrder;
+*/
+    @Required
+    @Column(nullable=true, name="requestedQuantity")
+    public int requestedQuantity;
 
     @Required
-    @ManyToOne()
-    @Column(nullable=false)
-    public Product requestedProduct;
+    @Column(name="acceptedQuantity")
+    public Integer acceptedQuantity;
 
     @Required
-    @Column(nullable=true)
-    public Integer requestedQuantity;
-
-    @Column(name="dateOfDelivered")
     @Formats.DateTime(pattern = "yyyy-MM-dd")
-    public Date dateOfDelivered;
+    @Column(name="shippingDate")
+    public Date shippingDate;
+
+    @Required
+    @Column(name="deliveryDate")
+    public Date deliveryDate;
+
+    @Required
+    @ManyToOne
+    public User operator;
 
     public static Model.Finder<String, Request> find = new Model.Finder<>(Request.class);
 
-    public Request(User user, Product product, Integer quantity) {
+    public static List<Request> findAll(){
+        List<Request> requests = Request.find.all();
+        return requests;
+    }
+
+    public static Optional<Request> findById(Long id) {
+        Request request = Request.find.where().eq("id", id).findUnique();
+        return request == null ? Optional.empty() : Optional.of( request );
+
+    }
+
+    public Request(User user, String productName, String category, int requestedQuantity) {
         this.requester = user;
-        this.requestedProduct = product;
-        this.requestedQuantity = quantity;
+        this.productName = productName;
+        this.category = category;
+        this.requestedQuantity = requestedQuantity;
     }
 
 }
