@@ -44,8 +44,9 @@ GET     /shopping-cart                                  controllers.Application.
 GET		/product							            controllers.ProductController.list()
 POST 	/product 							            controllers.ProductController.addProduct()
 
-POST    /buy-product/:productId/:productQuantity       controllers.ProductController.buyProduct( productId: Long, productQuantity: Integer )
-POST    /add-to-cart/:productId/:productQuantity       controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
+POST    /buy-product/:productId/:productQuantity        controllers.ProductController.buyProduct( productId: Long, productQuantity: Integer )
+POST    /add-to-cart/:productId/:productQuantity        controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
+POST    /submit-cart-form                               controllers.ProductController.checkoutCart()
 
 #PurchaseOrder
 GET		/purchase-order									controllers.PurchaseController.index()

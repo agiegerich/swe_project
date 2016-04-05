@@ -13,7 +13,7 @@ public class CartItem extends Model {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     public Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     public Product product;
 
     @Column(nullable=false)

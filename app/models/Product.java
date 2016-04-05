@@ -46,6 +46,7 @@ public class Product extends Model {
 
     @ManyToOne
     public Vendor preferredVendor;
+
 /*
     @OneToMany(mappedBy="requestedProduct")
     public List<Request> requests;
@@ -93,6 +94,10 @@ public class Product extends Model {
 
     public Integer getQuantity() {
         return this.quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Long getPrice() {

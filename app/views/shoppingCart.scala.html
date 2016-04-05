@@ -1,31 +1,36 @@
 @(items: List[models.CartItem])
 
 @main("Cart")( Arrays.asList("shoppingCart") )( Arrays.asList("shoppingCart") ) {
-<form id="cart-form" method="post" action="/submit-cart-form">
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Price</th>
-        </tr>
-        @for( index <- 0 until items.size) {
-            @if( items(index).quantityInCart > 0 ) {
-                <tr class="cart-listing">
-                    <input type="hidden" name="product-id" value="@items(index).getProduct().getId()">
-                    <td class="cart-item-name">@items(index).getProduct().getName()</td>
-                    <td class="cart-item-category">@items(index).getProduct().getCategory()</td>
-                    <input type="hidden" name="quantity-in-cart" style="display: hidden" value="@items(index).quantityInCart">
-                    <td class="cart-item-quantity" value="@items(index).quantityInCart">@items(index).quantityInCart</td>
-                    <td class="cart-item-price" value="@items(index).getProduct().getPrice()">@items(index).getProduct().getFormattedPrice()</td>
-                </tr>
+@if( items.size > 0 ) {
+    <form id="cart-form" method="post" action="/submit-cart-form">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            @for( index <- 0 until items.size) {
+                @if( items(index).quantityInCart > 0 ) {
+                    <tr class="cart-listing">
+                        <input type="hidden" name="product-id@index" value="@items(index).getProduct().getId()">
+                        <td class="cart-item-name">@items(index).getProduct().getName()</td>
+                        <td class="cart-item-category">@items(index).getProduct().getCategory()</td>
+                        <input type="hidden" name="quantity-in-cart@index" style="display: hidden" value="@items(index).quantityInCart">
+                        <td class="cart-item-quantity" value="@items(index).quantityInCart">@items(index).quantityInCart</td>
+                        <td class="cart-item-price" value="@items(index).getProduct().getPrice()">@items(index).getProduct().getFormattedPrice()</td>
+                    </tr>
+                }
             }
-        }
-    </table>
+        </table>
 
-</form>
+    </form>
 
-<button id="checkout-button">Checkout</button>
+
+    <button id="checkout-button">Checkout</button>
+} else {
+    <p>Cart is empty.</p>
+}
 
 <div id="confirmation-dialog">
     

@@ -5,6 +5,7 @@ import models.CartItem;
 import models.Product;
 import models.User;
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -12,9 +13,7 @@ import play.mvc.Result;
 import views.formdata.ProductDataform;
 import views.html.product;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ProductController extends Controller {
 
@@ -62,6 +61,61 @@ public class ProductController extends Controller {
             jsonObject.put("success", true);
         }
         return ok(Json.toJson(jsonObject));
+    }
+
+    public class IdQuantity {
+        IdQuantity(Long id, int quantity) {
+            this.id = id;
+            this.quantity = quantity;
+        }
+
+        Long id;
+        int quantity;
+    }
+
+    public Result checkoutCart() {
+        String email = session("email");
+        if (email == null) {
+            Application.sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
+
+        DynamicForm requestData = Form.form().bindFromRequest();
+        String idParam = "product-id";
+        String quantityParam = "quantity-in-cart";
+
+        // Gather all the product-ids to be purchased paired with the number to be purchased.
+/*        List<IdQuantity> productIdsAndQuantitiesToBePurchased = new ArrayList<>();
+        for (int i = 0; true; i++) {
+            String id = requestData.get(idParam+i);
+            String quantity = requestData.get(quantityParam+i);
+
+            if (id == null || quantity == null) {
+                break;
+            }
+
+            Logger.debug("Id of item in cart being purchased      : " + id);
+            Logger.debug("Quantity of item in cart being purchased: " + quantity);
+            Logger.debug("\n");
+
+            IdQuantity idQuantity = new IdQuantity(Long.parseLong(id), Integer.parseInt(quantity));
+            productIdsAndQuantitiesToBePurchased.add(idQuantity);
+        }*/
+
+        for (CartItem cartItem : user.get().getShoppingCart()) {
+
+            // Subtract from the number of products.
+            Product productToPurchase = cartItem.getProduct();
+            productToPurchase.setQuantity( productToPurchase.getQuantity() - cartItem.quantityInCart );
+            productToPurchase.save();
+            cartItem.delete();
+        }
+
+        return redirect(routes.ProductController.list());
     }
 
     public Result addToCart(Long productId, int productQuantity) {
