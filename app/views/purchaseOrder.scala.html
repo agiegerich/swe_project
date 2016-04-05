@@ -1,0 +1,46 @@
+@(requests: List[models.Request], requestForm: Form[views.formdata.RequestDataform], user: User)
+
+@import helper._
+
+@main("Purchase Order")( Arrays.asList("purchaseOrder") )( Arrays.asList("purchaseOrder") ) {
+
+
+<table>
+    <tr>
+        <th>Request ID</th>
+        <th>Supplier</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Quantity</th>
+        <th>Requester ID</th>
+        <th>Shipping Date</th>
+        <th>Action</th>
+    </tr>
+    @for( index <- 0 until requests.size) {
+        @helper.form(routes.RequestController.ship(requests(index).id)){
+        <tr class="request-listing category-@requests(index).category">
+            <td class="request-id">@requests(index).id</td>
+            <td class="request-supplier">@requests(index).supplier</td>
+            <td class="request-productName">@requests(index).productName</td>
+            <td class="request-category">@requests(index).category</td>
+            <td class="request-quantity" value="@requests(index).requestedQuantity">@requests(index).requestedQuantity</td>
+            <td class="requester" value="@requests(index).requester.id">@requests(index).requester.id</td>
+            <td class="shippingDate" value="@requests(index).shippingDate">@requests(index).shippingDate</td>
+            <td><input type="submit" value="Ship"></td>
+        </tr>
+        }
+    }
+</table>
+    @form(routes.PurchaseController.addRequestToOrder()) {
+
+        @inputText(requestForm("supplier"))
+        @inputText(requestForm("productName"))
+        @inputText(requestForm("category"))
+        @inputText(requestForm("quantity"))
+        @inputText(requestForm("price"))
+
+        <input type="submit" value="Add Request">
+
+    }
+
+}

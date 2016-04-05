@@ -2,7 +2,30 @@
 
 @main("Login Success")(new ArrayList())(new ArrayList()) {
     <h1>Welcome @user.firstName (Role: @user.role)</h1>
- @if(user.role == Role.MANAGER) {
+    <a>Product</a>
+    <br>
+    <a href="@routes.ProductController.list" class="logo"><span>Search Product</span></a>
+    <br>
+    @if(user.role == Role.MANAGER || user.role == Role.ADMINISTRATOR) {
+        <a>Request Management</a>
+        <br>
+    }
+    @if(user.role == Role.MANAGER) {
         <a href="@routes.RequestController.index" class="logo"><span>Make A Request</span></a>
+        <br>
+        <a href="@routes.RequestController.myRequest" class="logo"><span>View My Requests</span></a>
+        <br>
+        <a href="@routes.RequestController.requestHistory" class="logo"><span>Request History</span></a>
+        <br>
+        <a>Order Management</a>
+        <br>
+        <a href="@routes.PurchaseController.makeOrder" class="logo"><span>Make an Order</span></a>
+        <br>
+        <a href="@routes.PurchaseController.viewCurrentOrders">View Ongoing Orders</a>
+        <br>
+        <a href="@routes.PurchaseController.orderHistory">View Order History</a>
+    }
+    @if(user.role == Role.ADMINISTRATOR) {
+    	<a href="@routes.RequestController.list" class="logo"><span>See Posted Request</span></a>
     }
 }

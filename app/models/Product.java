@@ -46,10 +46,10 @@ public class Product extends Model {
 
     @ManyToOne
     public Vendor preferredVendor;
-
+/*
     @OneToMany(mappedBy="requestedProduct")
     public List<Request> requests;
-
+*/
     @ManyToMany
     @JoinTable(name="product_alternate_associations",
                     joinColumns = @JoinColumn(name="product_a", referencedColumnName="id"),

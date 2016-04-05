@@ -1,0 +1,39 @@
+@(purchaseOrders: List[models.PurchaseOrder], user: User)
+
+@import helper._
+
+@main("Purchase Order History")( Arrays.asList("purchaseOrder") )( Arrays.asList("purchaseOrder") ) {
+
+
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Supplier</th>
+        <th>Operator ID</th>
+        <th>Shipping Date</th>
+        <th>Delivery Date</th>
+        <th>State</th>
+    </tr>
+    @if(purchaseOrders.size > 0){
+    @for( index <- 0 until purchaseOrders.size) {
+                <tr class="purchase-orders">
+                    <td class="purchase-order-id">@purchaseOrders(index).id</td>
+                    <td class="purchase-order-supplier">@purchaseOrders(index).supplier</td>
+                    <td class="purchase-order-operator-id">@purchaseOrders(index).operatorId</td>
+                    <td class="purchase-order-shipping-date">@purchaseOrders(index).shippingDate</td>
+                    <td class="purchase-order-delivery-date">@purchaseOrders(index).deliveryDate</td>
+                    @if(purchaseOrders(index).done == false) {
+                    <td class="purchase-order-state">Pending...</td>
+                    }
+                    @if(purchaseOrders(index).done == true) {
+                    <td class="purchase-order-state">Awaiting Confirmation...</td>
+                    }
+                </tr>
+            }
+        }
+</table>
+    @if(purchaseOrders.size == 0) {
+        <p>No Orders Found</p>
+    }
+}
+

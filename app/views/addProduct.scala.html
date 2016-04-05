@@ -1,0 +1,32 @@
+@(request: Request, categories: List[String], formInfo: Form[views.formdata.AddProductDataform])
+
+@import helper._
+
+@main("Confirm Delivery")( Arrays.asList("request") )( Arrays.asList("request") ) {
+
+    <fieldset>
+        <legend>Confirm Request</legend>
+        <p class="field">Request ID: @request.id<p/>
+        <p class="field">Product Name: @request.productName<p/>
+        <p class="field">Category: @request.category<p/>
+        <p class="field">Quantity: @request.requestedQuantity<p/>
+        <p class="field">Operator ID: @request.operator.id<p/>
+        <p class="field">Shipping Date: @request.shippingDate<p/>
+        @form(routes.RequestController.addFeedback(request.id)) {
+
+            @inputText(formInfo("acceptedQuantity"))
+            @inputText(formInfo("price"))
+            @inputText(formInfo("feedback"))
+
+        <input type="submit" value="Confirm">
+        }
+    </fieldset>
+
+<div id="buy-confirmation-dialog">
+    <input id="confirmation-quantity" type="number">
+    <div id="buy-confirmation-dialog-txt"></div>
+</div>
+<div id="buy-error-dialog">
+    <div id="buy-error-dialog-txt"></div>
+</div>
+}

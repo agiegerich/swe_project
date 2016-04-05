@@ -1,0 +1,45 @@
+@(requests: List[models.Request], categories: List[String], user: User)
+
+@import helper._
+
+@main("Requests History")( Arrays.asList("request") )( Arrays.asList("request") ) {
+
+
+<table>
+    <tr>
+        <th>Request ID</th>
+        <th>Supplier</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Quantity</th>
+        <th>Accepted Quantiry</th>
+        <th>Operator ID</th>
+        <th>Shipping Date</th>
+        <th>Delivery Date</th>
+        <th>Action</th>
+    </tr>
+    @if(requests.size > 0){
+    @for( index <- 0 until requests.size) {
+                <tr class="request-listing category-@requests(index).category">
+                    <td class="request-id">@requests(index).id</td>
+                    <td class="request-supplier">@requests(index).supplier</td>
+                    <td class="request-productName">@requests(index).productName</td>
+                    <td class="request-category">@requests(index).category</td>
+                    <td class="request-quantity" value="@requests(index).requestedQuantity">@requests(index).requestedQuantity</td>
+                    <td class="request-acceptedQuantity" value="@requests(index).acceptedQuantity">@requests(index).acceptedQuantity</td>
+                    <td class="request-operator" value="@requests(index).operator.id">@requests(index).operator.id</td>
+                    <td class="request-shippingDate" value="@requests(index).shippingDate">@requests(index).shippingDate</td>
+                    <td class="request-deliveryDate" value="@requests(index).deliveryDate">@requests(index).deliveryDate</td>
+                    <td>Closed</td>
+                </tr>
+            }
+        }
+}
+</table>
+<div id="buy-confirmation-dialog">
+    <input id="confirmation-quantity" type="number">
+    <div id="buy-confirmation-dialog-txt"></div>
+</div>
+<div id="buy-error-dialog">
+    <div id="buy-error-dialog-txt"></div>
+</div>

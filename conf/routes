@@ -28,9 +28,15 @@ POST 	/reset-password         			            controllers.Application.resetPasswo
 
 GET 	/reset-password/:email 				            controllers.Application.resetPasswordEmailSent(email: String)
 
-#MaterialIndent
+#Request
 GET 	/request 		 								controllers.RequestController.index()
 POST 	/request 		 								controllers.RequestController.makeRequest()
+GET 	/requestlist 									controllers.RequestController.list()
+POST 	/requestlist 									controllers.RequestController.ship(id: Long)
+GET 	/myrequest 										controllers.RequestController.myRequest()
+GET 	/confirm/:id 									controllers.RequestController.confirm(id: Long)
+POST 	/confirm 										controllers.RequestController.addFeedback(id: Long)
+GET 	/requesthistory 								controllers.RequestController.requestHistory()
 
 GET     /shopping-cart                                  controllers.Application.shoppingCart()
 
@@ -40,3 +46,10 @@ POST 	/product 							            controllers.ProductController.addProduct()
 
 POST    /buy-product/:productId/:productQuantity       controllers.ProductController.buyProduct( productId: Long, productQuantity: Integer )
 POST    /add-to-cart/:productId/:productQuantity       controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
+
+#PurchaseOrder
+GET		/purchase-order									controllers.PurchaseController.index()
+POST    /purchase-order									controllers.PurchaseController.makeOrder()
+POST    /purchase-order									controllers.PurchaseController.addRequestToOrder()
+GET		/purchase-order/history 						controllers.PurchaseController.orderHistory()
+GET		/purchase-order/current							controllers.PurchaseController.viewCurrentOrders()
