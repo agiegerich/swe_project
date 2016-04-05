@@ -21,8 +21,16 @@ public class ProductController extends Controller {
     final Form<ProductDataform> productForm = Form.form(ProductDataform.class);
 
     public Result list() {
-
-        return ok(product.render(Product.findAll(), R.categories, productForm));
+        String email = session("email");
+        if (email == null) {
+            Application.sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
+        return ok(product.render(user.get(), Product.findAll(), R.categories, productForm));
     }
 
     public Result addProduct(){
@@ -71,7 +79,10 @@ public class ProductController extends Controller {
             Logger.debug("addToCart: " + email);
             Optional<User> optUser = User.findByEmail(email);
             User user = optUser.get();
-            CartItem cartItem = new CartItem(Product.findById( productId ).get(), productQuantity);
+            CartItem newItem = null;
+            // Check if the item is already in the cart
+            Product product = potentialProduct.get();
+            CartItem cartItem = new CartItem(product, productQuantity);
             user.getShoppingCart().add(cartItem);
             user.save();
         }

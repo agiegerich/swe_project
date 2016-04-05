@@ -60,7 +60,13 @@ $(document).ready(function() {
                         quantity = parseInt( $('#confirmation-quantity').val() );
 
                         // Make sure there are enough items available for purchase.
-                        if ( quantity < 1 ) {
+                        if ( quantity > quantityAvailable ) {
+                            $(this).dialog('close');
+                            $('#buy-error-dialog-txt').text("There are not that many items available for purchase.");
+                            $('#buy-error-dialog').dialog({
+                                modal: true
+                            });
+                        } else if ( quantity < 1 ) {
                             $(this).dialog('close');
                             $('#buy-error-dialog-txt').text("Quantity must be positive.");
                             $('#buy-error-dialog').dialog({

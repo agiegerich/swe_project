@@ -59,6 +59,15 @@ public class User extends Model {
     public List<CartItem> shoppingCart;
 
 
+    public int getQuantityInCartByProduct(Product product) {
+        for (CartItem item : shoppingCart) {
+            if (item.getProduct().getId() == product.getId()) {
+                return item.quantityInCart;
+            }
+        }
+        return 0;
+    }
+
     public List<CartItem> getShoppingCart() {
         return shoppingCart;
     }
