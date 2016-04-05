@@ -1,12 +1,18 @@
 package models;
 
 import com.avaje.ebean.Model;
+import play.data.format.Formats;
 
 import play.data.validation.Constraints.Required;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.Date;
+
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
 
 /************************************
 		Purchase Order Model
@@ -32,6 +38,19 @@ public class PurchaseOrder extends Model {
     @Column(nullable=false)
     public String supplier;
 
+    @Required
+    @Column(nullable=false)
+    public Long operatorId;
+
+    @Required
+    @Formats.DateTime(pattern = "yyyy-MM-dd")
+    @Column(nullable=false)
+    public Date shippingDate;
+
+    @Required
+    @Column(nullable=false)
+    public Date deliveryDate;
+
     @OneToMany(mappedBy = "purchaseOrder")
     public List<Request> requests;
 
@@ -42,7 +61,6 @@ public class PurchaseOrder extends Model {
         return purchaseOrders;
     }
 
-
     public static Optional<PurchaseOrder> findById(Long id) {
 
         PurchaseOrder purchaseOrder = PurchaseOrder.find.where().eq("id", id).findUnique();
@@ -50,7 +68,7 @@ public class PurchaseOrder extends Model {
 
     }
 
-	public static List<PurchaseOrder> findByCurrentOrders(User requester) {
+	public static List<PurchaseOrder> findOrdersInProgress(User requester) {
 
         List<PurchaseOrder> purchaseOrders = PurchaseOrder.find.where().eq( "requester", requester ).eq( "done", false).findList();
         return purchaseOrders;
@@ -62,6 +80,8 @@ public class PurchaseOrder extends Model {
         List<PurchaseOrder> purchaseOrders = PurchaseOrder.find.where().eq( "requester", requester ).eq( "done", true).findList();
         return purchaseOrders;
     }
+
+
 
     public PurchaseOrder(User user,String supplier) {
     	this.requester = user;

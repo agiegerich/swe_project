@@ -21,9 +21,9 @@
         <br>
         <a href="@routes.PurchaseController.makeOrder" class="logo"><span>Make an Order</span></a>
         <br>
-        <a href="">View Ongoing Orders</a>
+        <a href="@routes.PurchaseController.viewCurrentOrders">View Ongoing Orders</a>
         <br>
-        <a href="">View Order History</a>
+        <a href="@routes.PurchaseController.orderHistory">View Order History</a>
     }
     @if(user.role == Role.ADMINISTRATOR) {
     	<a href="@routes.RequestController.list" class="logo"><span>See Posted Request</span></a>

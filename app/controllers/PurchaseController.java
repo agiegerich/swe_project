@@ -17,7 +17,9 @@ import views.html.inspection;
 import views.html.addProduct;
 import views.html.requestHistory;
 import views.formdata.AddProductDataform;
+import views.html.orderHistory;
 import views.html.purchaseOrder;
+import views.html.currentOrders;
 
 import java.util.Optional;
 import java.util.Calendar;
@@ -98,10 +100,35 @@ public class PurchaseController extends Controller {
 
         //NEED TO ADD TO PURCHASE ORDER SOMEHOW
 
-
         return redirect(routes.PurchaseController.index());
     }
 
-	
+	public Result orderHistory() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        return ok(orderHistory.render(PurchaseOrder.findOrderHistory(user.get()), user.get()));
+    }
+
+    public Result viewCurrentOrders() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        return ok(currentOrders.render(PurchaseOrder.findOrdersInProgress(user.get()), user.get()));   
+    }
 
 }

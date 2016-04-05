@@ -51,3 +51,5 @@ POST    /add-to-cart/:productId/:productQuantity       controllers.ProductContro
 GET		/purchase-order									controllers.PurchaseController.index()
 POST    /purchase-order									controllers.PurchaseController.makeOrder()
 POST    /purchase-order									controllers.PurchaseController.addRequestToOrder()
+GET		/purchase-order/history 						controllers.PurchaseController.orderHistory()
+GET		/purchase-order/current							controllers.PurchaseController.viewCurrentOrders()
