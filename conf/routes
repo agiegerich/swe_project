@@ -48,8 +48,8 @@ POST    /buy-product/:productId/:productQuantity       controllers.ProductContro
 POST    /add-to-cart/:productId/:productQuantity       controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
 
 #PurchaseOrder
-GET		/purchase-order									controllers.PurchaseController.index()
+GET		/purchase-order									controllers.PurchaseController.index(id: Long)
 POST    /purchase-order									controllers.PurchaseController.makeOrder()
-POST    /purchase-order									controllers.PurchaseController.addRequestToOrder()
+POST    /purchase-order									controllers.PurchaseController.addRequestToOrder(id: Long)
 GET		/purchase-order/history 						controllers.PurchaseController.orderHistory()
 GET		/purchase-order/current							controllers.PurchaseController.viewCurrentOrders()

@@ -32,7 +32,7 @@ public class PurchaseController extends Controller {
 
     final Form<RequestDataform> requestForm = Form.form(RequestDataform.class);
 
-    public Result index() {
+    public Result index(Long id) {
         String email = session("email");
         if (email == null) {
             return redirect(routes.Application.index());
@@ -44,7 +44,7 @@ public class PurchaseController extends Controller {
         }
 
 
-        return ok(purchaseOrder.render(Request.findAll(),requestForm, user.get()));
+        return ok(purchaseOrder.render(Request.findAll(),requestForm, PurchaseOrder.findById(id).get(), user.get()));
     }
 
 	/*************************************************************************
@@ -66,11 +66,11 @@ public class PurchaseController extends Controller {
 
         //NEED TO MAKE ORDER HANDLE SUPPLIER
 
-        PurchaseOrder newPurchaseOrder = new PurchaseOrder(user.get(),"TODO");
+        PurchaseOrder newPurchaseOrder = new PurchaseOrder(user.get(),"Test");
 
         newPurchaseOrder.save();
 
-		return redirect(routes.PurchaseController.index());
+		return redirect(routes.PurchaseController.index(newPurchaseOrder.id));
 	}
 
 
@@ -81,7 +81,7 @@ public class PurchaseController extends Controller {
         description: adds a request order to the purchase order and displays the request on the purchase order listing.
 ****************************************************************/
 
-    public Result addRequestToOrder() {
+    public Result addRequestToOrder(Long id) {
         String email = session("email");
         if (email == null) {
             return redirect(routes.Application.index());
@@ -98,10 +98,25 @@ public class PurchaseController extends Controller {
 
         Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity, request.supplier);
 
+        newRequest.save();
+
+        PurchaseOrder purchaseOrder = PurchaseOrder.findById(id).get();
+
+        purchaseOrder.requests.add(newRequest);
+
+        purchaseOrder.save();
+
         //NEED TO ADD TO PURCHASE ORDER SOMEHOW
 
-        return redirect(routes.PurchaseController.index());
+        return redirect(routes.PurchaseController.index(id));
     }
+
+/******************************************************************
+    function: orderHistory
+        inputs: none
+        outputs: call to a webpage
+        description: Displays all process orders that are completed in a table with certain values displayed to the user
+******************************************************************/
 
 	public Result orderHistory() {
         String email = session("email");
@@ -116,6 +131,13 @@ public class PurchaseController extends Controller {
 
         return ok(orderHistory.render(PurchaseOrder.findOrderHistory(user.get()), user.get()));
     }
+
+/**********************************************************************
+    function: viewCurrentOrders
+        inputs: none
+        outputs: call to a webpage
+        description: Displays all process orders that are not yet completed in a table with ceratin values displayed
+**********************************************************************/
 
     public Result viewCurrentOrders() {
         String email = session("email");

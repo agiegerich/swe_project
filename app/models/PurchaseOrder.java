@@ -39,16 +39,12 @@ public class PurchaseOrder extends Model {
     public String supplier;
 
     @Required
-    @Column(nullable=false)
-    public Long operatorId;
-
-    @Required
     @Formats.DateTime(pattern = "yyyy-MM-dd")
-    @Column(nullable=false)
+    @Column
     public Date shippingDate;
 
     @Required
-    @Column(nullable=false)
+    @Column
     public Date deliveryDate;
 
     @OneToMany(mappedBy = "purchaseOrder")
@@ -56,10 +52,24 @@ public class PurchaseOrder extends Model {
 
     public static Model.Finder<String, PurchaseOrder> find = new Model.Finder<>(PurchaseOrder.class);
 
+/*********************************************************************************
+    function: findAll
+        inputs: none
+        outputs: List of PurchaseOrder objects
+        description: Finds all purchase orders listed in the database
+*********************************************************************************/
+
     public static List<PurchaseOrder> findAll(){
         List<PurchaseOrder> purchaseOrders = PurchaseOrder.find.all();
         return purchaseOrders;
     }
+
+/*********************************************************************************
+    function: findById
+        inputs: Long id - id of purchase order to be found
+        outputs: Optional<PurchaseOrder> - PurchaseOrder object of id, null if not found
+        description: Searches through the database for a purchase order with the id of the input id, returns null if it does not exist
+*********************************************************************************/
 
     public static Optional<PurchaseOrder> findById(Long id) {
 
@@ -68,12 +78,25 @@ public class PurchaseOrder extends Model {
 
     }
 
+/*********************************************************************************
+    function: findOrdersInProgress
+        inputs: User requester - user object that initiated the order
+        outputs: List of PurchaseOrder objects - all orders started by the input user
+        description: Finds all purchase orders, still in progress, initiated by the input user and returns the list.
+*********************************************************************************/
+
 	public static List<PurchaseOrder> findOrdersInProgress(User requester) {
 
         List<PurchaseOrder> purchaseOrders = PurchaseOrder.find.where().eq( "requester", requester ).eq( "done", false).findList();
         return purchaseOrders;
     }    
 
+/*********************************************************************************
+    function: findOrdersInProgress
+        inputs: User requester - user object that initiated the order
+        outputs: List of PurchaseOrder objects - all orders started by the input user
+        description: Finds all purchase orders, that have been completed, initiated by the input user and returns the list.
+*********************************************************************************/
 
     public static List<PurchaseOrder> findOrderHistory(User requester) {
 
@@ -81,10 +104,17 @@ public class PurchaseOrder extends Model {
         return purchaseOrders;
     }
 
-
+/*********************************************************************************
+    function: PurchaseOrder
+        inputs: User user - User object represented the user initiating the order
+                String supplier - Name of the supplier being ordered from
+        outputs: none
+        description: PurchaseOrder object constructor
+*********************************************************************************/
 
     public PurchaseOrder(User user,String supplier) {
     	this.requester = user;
+        this.done = false;
     	this.supplier = supplier;
     }
 }

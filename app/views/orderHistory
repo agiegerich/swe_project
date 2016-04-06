@@ -1,0 +1,28 @@
+@(processOrders: List[models.ProcessOrder], categories: List[String], user: User)
+
+@import helper._
+
+@main("Requests History")( Arrays.asList("request") )( Arrays.asList("request") ) {
+
+
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Supplier</th>
+        <th>Operator ID</th>
+        <th>Shipping Date</th>
+        <th>Delivery Date</th>
+    </tr>
+    @if(requests.size > 0){
+    @for( index <- 0 until processOrders.size) {
+                <tr class="process-orders">
+                    <td class="process-order-id">@processOrders.id</td>
+                    <td class="process-order-supplier">@processOrders.supplier</td>
+                    <td class="process-order-operator-id">@processOrders.operatorId</td>
+                    <td class="process-order-shipping-date">@processOrders.shippingDate</td>
+                    <td class="process-order-delivery-date">@processOrders.deliveryDate</td>
+                </tr>
+            }
+        }
+}
+</table>
