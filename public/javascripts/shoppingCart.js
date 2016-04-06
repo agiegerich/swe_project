@@ -47,6 +47,19 @@ $(document).ready(function() {
             ]
         });
     });
+
+    $('.delete-cart-item').click(function() {
+        var cartItemIdToDelete = $(this).attr('value');
+        console.log('Deleting cart item with id: ' + cartItemIdToDelete);
+        $.post(
+            '/delete-cart-item/'+cartItemIdToDelete,
+            '',
+            function(data) {
+                location.reload();
+            },
+            'json'
+        );
+    });
 });
 
 function totalValueInputIsValid() {

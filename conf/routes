@@ -48,6 +48,8 @@ POST    /buy-product/:productId/:productQuantity        controllers.ProductContr
 POST    /add-to-cart/:productId/:productQuantity        controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
 POST    /submit-cart-form                               controllers.ProductController.checkoutCart()
 
+POST    /delete-cart-item/:cartItemId                   controllers.ProductController.deleteCartItem( cartItemId: Long )
+
 #PurchaseOrder
 GET		/purchase-order									controllers.PurchaseController.index()
 POST    /purchase-order									controllers.PurchaseController.makeOrder()

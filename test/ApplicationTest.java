@@ -130,11 +130,10 @@ public class ApplicationTest {
     }
 
     @Test
-    public void test() {
+    public void shoppingCartTest() {
         User user = new User("test@gmail.com", "test", "test", Gender.FEMALE, new Date(0), "test", Role.USER);
         Product product1 = new Product("test", "electronics", 3, new Long(600) );
         user.getShoppingCart().add( new CartItem(product1, 2) );
         Assert.assertEquals(user.getShoppingCart().get(0).id, product1.id);
     }
-
 }

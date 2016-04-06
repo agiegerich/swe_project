@@ -140,7 +140,14 @@ public class ProductController extends Controller {
             user.getShoppingCart().add(cartItem);
             user.save();
         }
-        return ok( Json.toJson( jsonObject ) );
+        return ok(Json.toJson(jsonObject));
+    }
+
+    public Result deleteCartItem(Long cartItemId) {
+        Logger.debug("Deleting cart item with id: " + cartItemId);
+        CartItem cartItem = CartItem.findById(cartItemId);
+        cartItem.delete();
+        return ok( Json.toJson(new HashMap<String, String>()));
     }
 
 }

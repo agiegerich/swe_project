@@ -27,4 +27,11 @@ public class CartItem extends Model {
     public Product getProduct() {
         return product;
     }
+
+    public static Model.Finder<String, CartItem> find = new Model.Finder<>(CartItem.class);
+
+    public static CartItem findById(Long id) {
+        return find.where().eq("id", id).findUnique();
+    }
+
 }

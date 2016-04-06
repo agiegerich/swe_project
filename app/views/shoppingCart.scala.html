@@ -9,6 +9,7 @@
                 <th>Category</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th>Delete</th>
             </tr>
             @for( index <- 0 until items.size) {
                 @if( items(index).quantityInCart > 0 ) {
@@ -19,6 +20,7 @@
                         <input type="hidden" name="quantity-in-cart@index" style="display: hidden" value="@items(index).quantityInCart">
                         <td class="cart-item-quantity" value="@items(index).quantityInCart">@items(index).quantityInCart</td>
                         <td class="cart-item-price" value="@items(index).getProduct().getPrice()">@items(index).getProduct().getFormattedPrice()</td>
+                        <td><button type="button" class="delete-cart-item" value="@items(index).id">Delete</button></td>
                     </tr>
                 }
             }
@@ -27,7 +29,7 @@
     </form>
 
 
-    <button id="checkout-button">Checkout</button>
+    <button type="button" id="checkout-button">Checkout</button>
 } else {
     <p>Cart is empty.</p>
 }
