@@ -5,6 +5,7 @@ import models.CartItem;
 import models.Product;
 import models.User;
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -12,17 +13,23 @@ import play.mvc.Result;
 import views.formdata.ProductDataform;
 import views.html.product;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ProductController extends Controller {
 
     final Form<ProductDataform> productForm = Form.form(ProductDataform.class);
 
     public Result list() {
-
-        return ok(product.render(Product.findAll(), R.categories, productForm));
+        String email = session("email");
+        if (email == null) {
+            Application.sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
+        return ok(product.render(user.get(), Product.findAll(), R.categories, productForm));
     }
 
     public Result addProduct(){
@@ -56,6 +63,61 @@ public class ProductController extends Controller {
         return ok(Json.toJson(jsonObject));
     }
 
+    public class IdQuantity {
+        IdQuantity(Long id, int quantity) {
+            this.id = id;
+            this.quantity = quantity;
+        }
+
+        Long id;
+        int quantity;
+    }
+
+    public Result checkoutCart() {
+        String email = session("email");
+        if (email == null) {
+            Application.sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
+
+        DynamicForm requestData = Form.form().bindFromRequest();
+        String idParam = "product-id";
+        String quantityParam = "quantity-in-cart";
+
+        // Gather all the product-ids to be purchased paired with the number to be purchased.
+/*        List<IdQuantity> productIdsAndQuantitiesToBePurchased = new ArrayList<>();
+        for (int i = 0; true; i++) {
+            String id = requestData.get(idParam+i);
+            String quantity = requestData.get(quantityParam+i);
+
+            if (id == null || quantity == null) {
+                break;
+            }
+
+            Logger.debug("Id of item in cart being purchased      : " + id);
+            Logger.debug("Quantity of item in cart being purchased: " + quantity);
+            Logger.debug("\n");
+
+            IdQuantity idQuantity = new IdQuantity(Long.parseLong(id), Integer.parseInt(quantity));
+            productIdsAndQuantitiesToBePurchased.add(idQuantity);
+        }*/
+
+        for (CartItem cartItem : user.get().getShoppingCart()) {
+
+            // Subtract from the number of products.
+            Product productToPurchase = cartItem.getProduct();
+            productToPurchase.setQuantity( productToPurchase.getQuantity() - cartItem.quantityInCart );
+            productToPurchase.save();
+            cartItem.delete();
+        }
+
+        return redirect(routes.ProductController.list());
+    }
+
     public Result addToCart(Long productId, int productQuantity) {
         Logger.debug("POST for addToCart");
         Optional<Product> potentialProduct = Product.findById( productId );
@@ -71,11 +133,21 @@ public class ProductController extends Controller {
             Logger.debug("addToCart: " + email);
             Optional<User> optUser = User.findByEmail(email);
             User user = optUser.get();
-            CartItem cartItem = new CartItem(Product.findById( productId ).get(), productQuantity);
+            CartItem newItem = null;
+            // Check if the item is already in the cart
+            Product product = potentialProduct.get();
+            CartItem cartItem = new CartItem(product, productQuantity);
             user.getShoppingCart().add(cartItem);
             user.save();
         }
-        return ok( Json.toJson( jsonObject ) );
+        return ok(Json.toJson(jsonObject));
+    }
+
+    public Result deleteCartItem(Long cartItemId) {
+        Logger.debug("Deleting cart item with id: " + cartItemId);
+        CartItem cartItem = CartItem.findById(cartItemId);
+        cartItem.delete();
+        return ok( Json.toJson(new HashMap<String, String>()));
     }
 
 }

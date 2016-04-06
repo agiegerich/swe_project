@@ -1,23 +1,45 @@
 @(items: List[models.CartItem])
 
-@main("Shopping Cart")( new ArrayList() )( new ArrayList() ) {
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Quantity</th>
-        <th>Price</th>
-    </tr>
-    @for( index <- 0 until items.size) {
-        @if( items(index).quantityInCart > 0 ) {
-            <tr class="cart-listing">
-                <td class="cart-item-name">@items(index).getProduct().getName()</td>
-                <td class="cart-item-category">@items(index).getProduct().getCategory()</td>
-                <td class="cart-item-quantity" value="@items(index).quantityInCart">@items(index).quantityInCart</td>
-                <td class="cart-item-price">@items(index).getProduct().getFormattedPrice()</td>
+@main("Cart")( Arrays.asList("shoppingCart") )( Arrays.asList("shoppingCart") ) {
+@if( items.size > 0 ) {
+    <form id="cart-form" method="post" action="/submit-cart-form">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Delete</th>
             </tr>
-        }
-    }
-</table>
+            @for( index <- 0 until items.size) {
+                @if( items(index).quantityInCart > 0 ) {
+                    <tr class="cart-listing">
+                        <input type="hidden" name="product-id@index" value="@items(index).getProduct().getId()">
+                        <td class="cart-item-name">@items(index).getProduct().getName()</td>
+                        <td class="cart-item-category">@items(index).getProduct().getCategory()</td>
+                        <input type="hidden" name="quantity-in-cart@index" style="display: hidden" value="@items(index).quantityInCart">
+                        <td class="cart-item-quantity" value="@items(index).quantityInCart">@items(index).quantityInCart</td>
+                        <td class="cart-item-price" value="@items(index).getProduct().getPrice()">@items(index).getProduct().getFormattedPrice()</td>
+                        <td><button type="button" class="delete-cart-item" value="@items(index).id">Delete</button></td>
+                    </tr>
+                }
+            }
+        </table>
+
+    </form>
+
+
+    <button type="button" id="checkout-button">Checkout</button>
+} else {
+    <p>Cart is empty.</p>
+}
+
+<div id="confirmation-dialog">
+    
+    <div><input type="number" id="confirmation-dollars"><span>.</span>
+    <input type="number" id="confirmation-cents" max="99"><span>$</span></div>
+    <div id="confirmation-dialog-txt"></div>
+    <div id="confirmation-dialog-error"></div>
+</div>
 
 }

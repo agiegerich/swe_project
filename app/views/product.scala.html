@@ -1,4 +1,4 @@
-@(products: List[models.Product], categories: List[String], productForm: Form[views.formdata.ProductDataform])
+@(user: User, products: List[models.Product], categories: List[String], productForm: Form[views.formdata.ProductDataform])
 
 @import helper._
 
@@ -28,13 +28,15 @@
         <th>Buy</th>
     </tr>
     @for( index <- 0 until products.size) {
-        @if( products(index).quantity > 0 ) {
+        @if( products(index).quantity - user.getQuantityInCartByProduct( products(index) ) > 0 ) {
             <tr class="product-listing category-@products(index).category">
                 <td class="product-name">@products(index).name</td>
                 <td class="product-category">@products(index).category</td>
-                <td class="product-quantity" value="@products(index).quantity">@products(index).quantity</td>
+                <td class="product-quantity" value="@(products(index).quantity - user.getQuantityInCartByProduct( products(index) ) )">
+                    @(products(index).quantity - user.getQuantityInCartByProduct( products(index) ) )
+                </td>
                 <td class="product-price" value="@products(index).price">@products(index).getFormattedPrice()</td>
-                <td><button class="buy-button" value="@products(index).id">Buy</button></td>
+                <td><button class="buy-button" value="@products(index).id">Add To Cart</button></td>
             </tr>
         }
     }

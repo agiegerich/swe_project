@@ -1,0 +1,16 @@
+#confirmation-dollars {
+    float: left;
+    width: 100px;
+    margin-right: 2px;
+}
+#confirmation-cents {
+    width: 50px;
+}
+
+#confirmation-dialog-txt {
+    clear: left;
+}
+
+#confirmation-dialog-error {
+    color: red;
+}

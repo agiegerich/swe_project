@@ -46,6 +46,7 @@ public class Product extends Model {
 
     @ManyToOne
     public Vendor preferredVendor;
+
 /*
     @OneToMany(mappedBy="requestedProduct")
     public List<Request> requests;
@@ -70,13 +71,8 @@ public class Product extends Model {
 
     public static Optional<Product> findById(Long id) {
         Product product = Product.find.where().eq("id", id).findUnique();
-        return product == null ? Optional.empty() : Optional.of( product );
+        return product == null ? Optional.empty() : Optional.of(product);
 
-    }
-
-    public static List<Product> findByCategory( String categoryToFind ) {
-        List<Product> products = Product.find.where().eq( "category", categoryToFind ).findList();
-        return products;
     }
 
     public long getId() {
@@ -93,6 +89,10 @@ public class Product extends Model {
 
     public Integer getQuantity() {
         return this.quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Long getPrice() {

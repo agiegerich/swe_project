@@ -2,20 +2,15 @@ import com.avaje.ebean.Ebean;
 import constants.R;
 import controllers.Encryptor;
 import controllers.Util;
-import models.Gender;
-import models.Registration;
-import models.Role;
-import models.User;
+import models.*;
 import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,13 +55,13 @@ public class ApplicationTest {
     public void createCleanDb() {
         Ebean.execute(Ebean.createCallableSql(dropDdl));
         Ebean.execute(Ebean.createCallableSql(createDdl));
-    } 
-
-
-    @Test
-    public void renderTemplate() {
-        assertEquals("text/html", views.html.index.render().contentType());
     }
+
+
+//    @Test
+//    public void renderTemplate() {
+//        assertEquals("text/html", views.html.index.render().contentType());
+//    }
 
     @Test
     public void encryptorTest() {
@@ -110,4 +105,35 @@ public class ApplicationTest {
         assertEquals( newUser.get().id, user.id );
     }
 
+    @Test
+    public void getProductByIdTest() {
+        Product product = new Product("test", "electronics", 3, new Long(600) );
+        product.save();
+
+        Optional<Product> opt = Product.findById(product.id);
+        Assert.assertTrue(opt.isPresent());
+        Assert.assertEquals(opt.get().getId(), (long) product.id);
+    }
+
+    @Test
+    public void getAllProductsTest() {
+        Product product1 = new Product("test", "electronics", 3, new Long(600) );
+        Product product2 = new Product("test", "electronics", 3, new Long(6000) );
+        Product product3 = new Product("test", "electronics", 3, new Long(60000) );
+
+        product1.save();
+        product2.save();
+        product3.save();
+
+        List<Product> products = Product.findAll();
+        Assert.assertEquals(products.size(), 3);
+    }
+
+    @Test
+    public void shoppingCartTest() {
+        User user = new User("test@gmail.com", "test", "test", Gender.FEMALE, new Date(0), "test", Role.USER);
+        Product product1 = new Product("test", "electronics", 3, new Long(600) );
+        user.getShoppingCart().add( new CartItem(product1, 2) );
+        Assert.assertEquals(user.getShoppingCart().get(0).id, product1.id);
+    }
 }
