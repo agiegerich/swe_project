@@ -41,12 +41,12 @@ public class Request extends Model {
     @Required
     @Column(nullable=false)
     public String category;
-
+/*
     @Required
     @ManyToOne()
     @Column(nullable=false, name="purchaseOrder")
     public PurchaseOrder purchaseOrder;
-
+*/
     @Required
     @Column(nullable=true, name="requestedQuantity")
     public int requestedQuantity;

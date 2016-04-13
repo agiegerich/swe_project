@@ -12,6 +12,8 @@
         <th>Shipping Date</th>
         <th>Delivery Date</th>
         <th>State</th>
+        <th>View</th>
+        <th>Add</th>
     </tr>
     @if(purchaseOrders.size > 0){
     @for( index <- 0 until purchaseOrders.size) {
@@ -20,6 +22,8 @@
                     <td class="purchase-order-supplier">@purchaseOrders(index).supplier</td>
                     <td class="purchase-order-shipping-date">@purchaseOrders(index).shippingDate</td>
                     <td class="purchase-order-delivery-date">@purchaseOrders(index).deliveryDate</td>
+                    <td class="purchase-order-view-requests"><a href="@routes.PurchaseController.viewRequests(purchaseOrders(index).id)">View Requests</a></td>
+                    <td class="purchase-order-add-request"><a href="@routes.PurchaseController.addToOrder(purchaseOrders(index).id)">Add Requests to order</a></td>
                     @if(purchaseOrders(index).done == false) {
                     <td class="purchase-order-state">Pending...</td>
                     }

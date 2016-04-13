@@ -17,9 +17,12 @@ import views.html.inspection;
 import views.html.addProduct;
 import views.html.requestHistory;
 import views.formdata.AddProductDataform;
+import views.formdata.PurchaseOrderDataform;
 import views.html.orderHistory;
 import views.html.purchaseOrder;
 import views.html.currentOrders;
+import views.html.addOrderRequests;
+import views.html.orderViewRequests;
 
 import java.util.Optional;
 import java.util.Calendar;
@@ -30,9 +33,9 @@ import java.util.Calendar;
 
 public class PurchaseController extends Controller {
 
-    final Form<RequestDataform> requestForm = Form.form(RequestDataform.class);
+    final Form<PurchaseOrderDataform> orderForm = Form.form(PurchaseOrderDataform.class);
 
-    public Result index(Long id) {
+    public Result index() {
         String email = session("email");
         if (email == null) {
             return redirect(routes.Application.index());
@@ -44,7 +47,7 @@ public class PurchaseController extends Controller {
         }
 
 
-        return ok(purchaseOrder.render(Request.findAll(),requestForm, PurchaseOrder.findById(id).get(), user.get()));
+        return ok(purchaseOrder.render(orderForm, user.get()));
     }
 
 	/*************************************************************************
@@ -64,13 +67,17 @@ public class PurchaseController extends Controller {
             return Application.sendBadRequest("Invalid Session");
         }
 
+        Form<PurchaseOrderDataform> formData = Form.form(PurchaseOrderDataform.class).bindFromRequest();
+
+        PurchaseOrderDataform order = formData.get();
+
         //NEED TO MAKE ORDER HANDLE SUPPLIER
 
-        PurchaseOrder newPurchaseOrder = new PurchaseOrder(user.get(),"Test");
+        PurchaseOrder newPurchaseOrder = new PurchaseOrder(user.get(),order.supplier);
 
         newPurchaseOrder.save();
 
-		return redirect(routes.PurchaseController.index(newPurchaseOrder.id));
+		return redirect(routes.PurchaseController.viewCurrentOrders());
 	}
 
 
@@ -82,6 +89,7 @@ public class PurchaseController extends Controller {
 ****************************************************************/
 
     public Result addRequestToOrder(Long id) {
+
         String email = session("email");
         if (email == null) {
             return redirect(routes.Application.index());
@@ -96,19 +104,17 @@ public class PurchaseController extends Controller {
 
         RequestDataform request = formData.get();
 
-        Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity, request.supplier);
-
-        newRequest.save();
-
         PurchaseOrder purchaseOrder = PurchaseOrder.findById(id).get();
 
-        purchaseOrder.requests.add(newRequest);
+        Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity, purchaseOrder.supplier);
+
+        //newRequest.save();
+
+        purchaseOrder.getRequests().add(newRequest);
 
         purchaseOrder.save();
 
-        //NEED TO ADD TO PURCHASE ORDER SOMEHOW
-
-        return redirect(routes.PurchaseController.index(id));
+        return redirect(routes.PurchaseController.addToOrder(id));
     }
 
 /******************************************************************
@@ -151,6 +157,55 @@ public class PurchaseController extends Controller {
         }
 
         return ok(currentOrders.render(PurchaseOrder.findOrdersInProgress(user.get()), user.get()));   
+    }
+
+/**********************************************************************
+    function: viewRequests
+        inputs: Long id, id of the purchase order being viewed
+        outputs: call to a webpage
+        description: Displays all requests contained in a process order
+**********************************************************************/
+
+    public Result viewRequests(Long id) {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        PurchaseOrder purchaseOrder = PurchaseOrder.findById(id).get();
+
+        return ok(orderViewRequests.render(purchaseOrder.requests,purchaseOrder,user.get()));
+    }
+
+/**********************************************************************
+    function: addToOrder
+        inputs: Long id - id of the purchase order being added to
+        outputs: call to a webpage
+        description: Displays all requests in a process order currently as well as give the option to add more requests
+**********************************************************************/
+
+    public Result addToOrder(Long id) {
+
+        final Form<RequestDataform> requestForm = Form.form(RequestDataform.class);
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        PurchaseOrder purchaseOrder = PurchaseOrder.findById(id).get();
+
+        return ok(addOrderRequests.render(purchaseOrder.getRequests(),requestForm,purchaseOrder,user.get()));
     }
 
 }

@@ -47,7 +47,7 @@ public class PurchaseOrder extends Model {
     @Column
     public Date deliveryDate;
 
-    @OneToMany(mappedBy = "purchaseOrder")
+    @OneToMany(cascade = CascadeType.ALL) //(mappedBy = "purchaseOrder")
     public List<Request> requests;
 
     public static Model.Finder<String, PurchaseOrder> find = new Model.Finder<>(PurchaseOrder.class);
@@ -102,6 +102,17 @@ public class PurchaseOrder extends Model {
 
         List<PurchaseOrder> purchaseOrders = PurchaseOrder.find.where().eq( "requester", requester ).eq( "done", true).findList();
         return purchaseOrders;
+    }
+
+/**********************************************************************
+    function: getRequests
+        inputs: none
+        outputs: List<Requests> - list of requests
+        description: Obtains the list of requests contained by a purchase order object
+**********************************************************************/
+
+    public List<Request> getRequests() {
+        return requests;
     }
 
 /*********************************************************************************
