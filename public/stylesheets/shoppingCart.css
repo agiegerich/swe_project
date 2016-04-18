@@ -18,3 +18,7 @@
 .bold-text {
  font-weight: bold
 }
+
+#delivery-time {
+    margin-left: 5px;
+}

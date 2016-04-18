@@ -72,6 +72,8 @@ public class Request extends Model {
     @MaxLength(200)
     public String feedback;
 
+    public Size size;
+
     public static Model.Finder<String, Request> find = new Model.Finder<>(Request.class);
 
     public static List<Request> findAll(){
@@ -98,12 +100,13 @@ public class Request extends Model {
         return requests;
     }
 
-    public Request(User user, String productName, String category, int requestedQuantity, String supplier) {
+    public Request(User user, String productName, String category, int requestedQuantity, Size size, String supplier) {
         this.requester = user;
         this.done = false;
         this.productName = productName;
         this.category = category;
         this.requestedQuantity = requestedQuantity;
+        this.size = size;
         this.supplier = supplier;
     }
 

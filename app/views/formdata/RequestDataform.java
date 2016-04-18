@@ -1,5 +1,7 @@
 package views.formdata;
 
+import models.Size;
+
 public class RequestDataform {
 
 	public String supplier;
@@ -11,4 +13,6 @@ public class RequestDataform {
     public Integer quantity;
 
     public Long price;
+
+    public Size size;
 }

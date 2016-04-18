@@ -47,6 +47,7 @@ public class Product extends Model {
     @ManyToOne
     public Vendor preferredVendor;
 
+    @Column(nullable=false)
     public Size size;
 
 /*
@@ -105,11 +106,12 @@ public class Product extends Model {
         return Util.formatLongAsDollars( this.price );
     }
 
-    public Product(String productName, String category, Integer quantity, Long price){
+    public Product(String productName, String category, Integer quantity, Long price, Size size){
         this.name = productName;
         this.category = category;
         this.quantity = quantity;
         this.price = price;
+        this.size = size;
     }
 }
 

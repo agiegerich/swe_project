@@ -38,7 +38,7 @@ public class ProductController extends Controller {
 
         ProductDataform product = formData.get();
 
-        Product newProduct = new Product(product.productName, product.category, product.quantity, product.price);
+        Product newProduct = new Product(product.productName, product.category, product.quantity, product.price, product.size);
 
         newProduct.save();
 

@@ -106,7 +106,20 @@ public class PurchaseController extends Controller {
 
         PurchaseOrder purchaseOrder = PurchaseOrder.findById(id).get();
 
-        Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity, purchaseOrder.supplier);
+        Logger.debug("User: " + user.get().email);
+        Logger.debug("Product name: " + request.productName);
+        Logger.debug("Category: " + request.category);
+        Logger.debug("Quantity: " + request.quantity);
+        Logger.debug("Size: " + request.size);
+        Logger.debug("Supplier: " + purchaseOrder.supplier);
+
+        Request newRequest = new Request(
+                user.get(),
+                request.productName,
+                request.category,
+                request.quantity,
+                request.size,
+                purchaseOrder.supplier);
 
         //newRequest.save();
 

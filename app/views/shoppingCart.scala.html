@@ -1,4 +1,4 @@
-@(items: List[models.CartItem], cartTotal: String)
+@(items: List[models.CartItem], cartTotal: String, deliveryTime: String)
 
 @main("Cart")( Arrays.asList("shoppingCart") )( Arrays.asList("shoppingCart") ) {
 @if( items.size > 0 ) {
@@ -35,7 +35,9 @@
     </form>
 
 
-    <button type="button" id="checkout-button">Checkout</button>
+
+
+    <button type="button" id="checkout-button">Checkout</button><span class="bold" id="delivery-time">Delivery Time: @deliveryTime</span>
 } else {
     <p>Cart is empty.</p>
 }

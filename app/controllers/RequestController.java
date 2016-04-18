@@ -55,7 +55,7 @@ public class RequestController extends Controller {
 
         RequestDataform request = formData.get();
 
-        Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity, request.supplier);
+        Request newRequest = new Request(user.get(), request.productName, request.category, request.quantity, request.size, request.supplier);
 
         newRequest.save();
 
@@ -191,7 +191,7 @@ public class RequestController extends Controller {
 
         request.save();
 
-        Product newProduct = new Product(request.productName, request.category, request.acceptedQuantity, formData.get().price);
+        Product newProduct = new Product(request.productName, request.category, request.acceptedQuantity, formData.get().price, request.size);
 
         newProduct.save();
 

@@ -72,3 +72,7 @@ th {
 .hidden {
 	display: hidden
 }
+
+.bold {
+	font-weight: bold;
+}

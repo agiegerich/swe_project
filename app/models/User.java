@@ -71,6 +71,27 @@ public class User extends Model {
     public List<CartItem> getShoppingCart() {
         return shoppingCart;
     }
+
+    public String getCartDeliveryTime() {
+        List<CartItem> cart = getShoppingCart();
+        Size largestSize = Size.SMALL;
+        for (CartItem item : cart) {
+            if (item.getProduct().size == Size.LARGE) {
+                largestSize = Size.LARGE;
+                break;
+            } else if (item.getProduct().size == Size.MEDIUM) {
+                largestSize = Size.MEDIUM;
+            }
+        }
+
+        if (largestSize == Size.SMALL) {
+            return "1-3 days";
+        } else if (largestSize == Size.MEDIUM) {
+            return "3-5 days";
+        } else {
+            return "5-7 days";
+        }
+    }
     
     public static Model.Finder<String, User> find = new Model.Finder<>(User.class);
 

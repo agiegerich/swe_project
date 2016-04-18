@@ -48,14 +48,14 @@ public class Application extends Controller {
         String automotiveCategory = "automotive";
         Long mustangPrice = new Long(3500000);
         if ( !Product.findSpecific(mustangName, automotiveCategory, mustangPrice).isPresent() ) {
-            Product mustang = new Product(mustangName, automotiveCategory, 1, mustangPrice);
+            Product mustang = new Product(mustangName, automotiveCategory, 1, mustangPrice, Size.LARGE);
             mustang.save();
         }
 
         String mclarenName = "McLaren F1";
         Long mclarenPrice = new Long(60000000);
         if ( !Product.findSpecific(mclarenName, automotiveCategory, mclarenPrice).isPresent() ) {
-            Product mclaren = new Product(mclarenName, automotiveCategory, 1, mclarenPrice );
+            Product mclaren = new Product(mclarenName, automotiveCategory, 1, mclarenPrice, Size.LARGE );
             mclaren.save();
         }
 
@@ -64,14 +64,14 @@ public class Application extends Controller {
         String clothingCategory = "clothing";
         Long shirtPrice = new Long(500);
         if (!Product.findSpecific(shirtName, clothingCategory, shirtPrice).isPresent() ) {
-            Product shirt = new Product(shirtName, clothingCategory, 5, shirtPrice);
+            Product shirt = new Product(shirtName, clothingCategory, 5, shirtPrice, Size.SMALL);
             shirt.save();
         }
 
         String sockName = "a sock";
         Long sockPrice = new Long(100);
         if ( !Product.findSpecific(sockName, clothingCategory, sockPrice).isPresent() ) {
-            Product sock = new Product(sockName, clothingCategory, 3, sockPrice);
+            Product sock = new Product(sockName, clothingCategory, 3, sockPrice, Size.SMALL);
             sock.save();
         }
 
@@ -79,14 +79,14 @@ public class Application extends Controller {
         String electronicsCategory = "electronics";
         Long tvPrice = new Long(500000);
         if ( !Product.findSpecific(tvName, electronicsCategory, tvPrice).isPresent() ) {
-            Product tv = new Product("flat screen TV", electronicsCategory, 10, tvPrice);
+            Product tv = new Product("flat screen TV", electronicsCategory, 10, tvPrice, Size.MEDIUM);
             tv.save();
         }
 
         String computerName = "computer";
         Long computerPrice = new Long(40000);
         if ( !Product.findSpecific(computerName, electronicsCategory, computerPrice).isPresent() ) {
-            Product computer = new Product(computerName, electronicsCategory, 11, computerPrice);
+            Product computer = new Product(computerName, electronicsCategory, 11, computerPrice, Size.MEDIUM);
             computer.save();
         }
     }
@@ -157,7 +157,7 @@ public class Application extends Controller {
 
         String totalValueString = Util.formatLongAsDollars(totalValue);
 
-        return ok( shoppingCart.render(user.get().getShoppingCart(), totalValueString) );
+        return ok( shoppingCart.render(user.get().getShoppingCart(), totalValueString, user.get().getCartDeliveryTime()) );
     }
 
     public Result index() {
