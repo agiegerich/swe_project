@@ -31,8 +31,11 @@
                 <a href="@routes.Application.shoppingCart" style="float:right;padding:20px">Cart</a>
                 <a href="@routes.ProductController.list" style="float:right;padding:20px">Shop</a>
                 <a href="@routes.Application.index" style="float:right;padding:20px">Home</a>
-
+                @if( User.findByEmail( session.get("email") ).get().role == Role.ADMINISTRATOR ) {
+                    <a href="@routes.AdminController.listAllUsers" style="float:right;padding:20px">Admin</a>
+                }
             }
+
         </div>
         <div style = "margin-top:60px;top:50%;width:100%;height:100%">@content</div>
     </body>

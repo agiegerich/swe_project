@@ -29,7 +29,7 @@ public class ProductController extends Controller {
             session().clear();
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
-        return ok(product.render(user.get(), Product.findAll(), R.categories, productForm));
+        return ok( product.render(user.get(), Product.findAll(), R.categories, productForm) );
     }
 
     public Result addProduct(){

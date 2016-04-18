@@ -58,3 +58,6 @@ GET		/purchase-order/current							controllers.PurchaseController.viewCurrentOrd
 GET		/purchase-order/view-requests/:id				controllers.PurchaseController.viewRequests(id: Long)
 GET 	/purchase-order/add-requests/:id 				controllers.PurchaseController.addToOrder(id: Long)
 POST 	/purchase-order/add-requests/:id 				controllers.PurchaseController.addRequestToOrder(id: Long)
+
+#Admin
+GET     /admin/users                                    controllers.AdminController.listAllUsers()

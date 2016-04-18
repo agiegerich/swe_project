@@ -47,6 +47,8 @@ public class Product extends Model {
     @ManyToOne
     public Vendor preferredVendor;
 
+    public Size size;
+
 /*
     @OneToMany(mappedBy="requestedProduct")
     public List<Request> requests;
