@@ -145,14 +145,18 @@ public class Application extends Controller {
 
         // If items have been purchased that were in the users shopping cart, subtract from the number of items in the
         // shopping cart.
+        long totalValue = 0;
         for ( CartItem item : user.get().getShoppingCart() ) {
             if (item.quantityInCart > item.getProduct().getQuantity() ) {
                 item.quantityInCart = item.getProduct().getQuantity();
                 item.save();
             }
+            totalValue += item.getProduct().getPrice() * item.quantityInCart;
         }
 
-        return ok(shoppingCart.render(user.get().getShoppingCart()));
+        String totalValueString = Util.formatLongAsDollars(totalValue);
+
+        return ok( shoppingCart.render(user.get().getShoppingCart(), totalValueString) );
     }
 
     public Result index() {

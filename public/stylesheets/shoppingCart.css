@@ -14,3 +14,7 @@
 #confirmation-dialog-error {
     color: red;
 }
+
+.bold-text {
+ font-weight: bold
+}
