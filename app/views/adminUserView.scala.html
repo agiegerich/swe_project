@@ -1,2 +1,41 @@
+@(users: List[User])
+
 @main("Users")( Arrays.asList("adminUserView") )( Arrays.asList("adminUserView") ) {
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Promote</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for( index <- 0 until users.size ) {
+
+                <tr>
+                    <td>@users(index).email</td>
+                    <td>@users(index).role</td>
+                    <td>@users(index).firstName</td>
+                    <td>@users(index).lastName</td>
+                    <td>@users(index).gender</td>
+                    <td>@users(index).dateOfBirth</td>
+                    <td>
+                        <span class="hidden userId" value="@users(index).id"></span>
+                        @if( users(index).role == Role.MANAGER ) {
+                            <button type="button" class="make-admin">Make Admin</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
 }

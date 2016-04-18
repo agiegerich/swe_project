@@ -58,3 +58,7 @@ th, td {
 th {
 	text-align: left;
 }
+
+.hidden {
+	display: hidden
+}

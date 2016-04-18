@@ -83,6 +83,11 @@ public class User extends Model {
         User user = User.find.where().eq("id", id).findUnique();
         return user;
     }
+
+    public static List<User> findAll() {
+        List<User> users = User.find.all();
+        return users;
+    }
     
     public User(String email, String firstName, String lastName, Gender gender, Date dateOfBirth, String password, Role role){
         this.email = email;
