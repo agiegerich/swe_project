@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Role;
+import models.RoleRequest;
 import models.User;
 import play.Logger;
 import play.libs.Json;
@@ -23,7 +24,7 @@ public class AdminController extends Controller {
             return invalidResult.get();
         }
 
-        return ok( adminUserView.render( User.findAll() ) );
+        return ok( adminUserView.render( User.findAll(), RoleRequest.findAll() ) );
     }
 
     public Result makeAdmin(long userId) {
@@ -50,6 +51,22 @@ public class AdminController extends Controller {
 
 
 
+    }
+
+    public Result grantRoleRequest(long userId) {
+        Optional<Result> invalidResult = checkSessionAndAdmin();
+        if (invalidResult.isPresent()) {
+            return invalidResult.get();
+        }
+
+        RoleRequest roleRequest = RoleRequest.findByUserId(userId);
+        User user = roleRequest.getUser();
+        user.role = roleRequest.role;
+        user.save();
+
+        roleRequest.delete();
+
+        return ok();
     }
 
     public Optional<Result> checkSessionAndAdmin() {

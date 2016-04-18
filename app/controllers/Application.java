@@ -11,6 +11,7 @@ import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.formdata.Login;
+import views.formdata.RegistrationForm;
 import views.formdata.ResetPassword;
 import views.html.*;
 
@@ -171,7 +172,7 @@ public class Application extends Controller {
                 session().clear();
                 return sendBadRequest("Invalid Session");
             }
-            return ok( welcome.render( potentialUser.get() ) );
+            return ok(welcome.render(potentialUser.get()));
         }
     }
 
@@ -239,7 +240,7 @@ public class Application extends Controller {
     public static Result sendBadRequest( String error ) {
         List<String> errorList = new ArrayList<>();
         errorList.add( error );
-        return sendBadRequest( errorList );
+        return sendBadRequest(errorList);
     }
 
     public static Result sendBadRequest(List<String> errors) {
@@ -251,19 +252,20 @@ public class Application extends Controller {
 
         // Validate the form.
 
-        Form<Registration> registrationForm = Form.form( Registration.class ).fill(new Registration(null)).bindFromRequest();
+        RegistrationForm registrationForm = Form.form( RegistrationForm.class ).bindFromRequest().get();
 
-        Map<String, String> data = registrationForm.data();
-        for ( String key : data.keySet() ) {
-            Logger.debug( key + ": " + data.get(key) + "\n" );
-        }
+        Registration registration = new Registration(
+                registrationForm.firstName,
+                registrationForm.lastName,
+                registrationForm.email,
+                registrationForm.dateOfBirth,
+                registrationForm.role,
+                registrationForm.gender,
+                registrationForm.password,
+                registrationForm.repeatPassword,
+                registrationForm.roleConfirmationId
+        );
 
-        if ( registrationForm.hasErrors() ) {
-            Logger.debug("Found errors in registration form.");
-            return sendBadRequest( ApplicationHelpers.getErrorList( registrationForm ) );
-        }
-
-        Registration registration = registrationForm.get();
         try {
             Logger.debug("Password before encryption: " + registration.password );
             registration.password = Encryptor.encrypt( R.AES_KEY, R.AES_IV, registration.password);
@@ -315,9 +317,15 @@ public class Application extends Controller {
                     correspondingRegistration.gender,
                     correspondingRegistration.dateOfBirth,
                     correspondingRegistration.password,
-                    correspondingRegistration.role );
+                    Role.USER );
             
             newUser.save();
+
+            if (correspondingRegistration.role != Role.USER) {
+                RoleRequest roleRequest = new RoleRequest(newUser, correspondingRegistration.role);
+                roleRequest.save();
+            }
+
             correspondingRegistration.delete();
             
             return ok( registrationConfirmation.render() );

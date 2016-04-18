@@ -21,4 +21,20 @@ $(document).ready( function() {
         );
     });
 
+    $('.grant-role').click(function() {
+        console.log('Granting role...');
+        var userIdToPromote = $(this).siblings('.userId').first().attr('value');
+
+        $.post(
+            '/grant-role-request/'+userIdToPromote,
+            '',
+            function( data ) {
+                location.reload();
+            },
+            ''
+        );
+
+        console.log('Granting role to user with id: ' + userIdToPromote);
+    });
+
 });

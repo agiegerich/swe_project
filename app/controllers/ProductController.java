@@ -84,28 +84,6 @@ public class ProductController extends Controller {
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
 
-        DynamicForm requestData = Form.form().bindFromRequest();
-        String idParam = "product-id";
-        String quantityParam = "quantity-in-cart";
-
-        // Gather all the product-ids to be purchased paired with the number to be purchased.
-/*        List<IdQuantity> productIdsAndQuantitiesToBePurchased = new ArrayList<>();
-        for (int i = 0; true; i++) {
-            String id = requestData.get(idParam+i);
-            String quantity = requestData.get(quantityParam+i);
-
-            if (id == null || quantity == null) {
-                break;
-            }
-
-            Logger.debug("Id of item in cart being purchased      : " + id);
-            Logger.debug("Quantity of item in cart being purchased: " + quantity);
-            Logger.debug("\n");
-
-            IdQuantity idQuantity = new IdQuantity(Long.parseLong(id), Integer.parseInt(quantity));
-            productIdsAndQuantitiesToBePurchased.add(idQuantity);
-        }*/
-
         for (CartItem cartItem : user.get().getShoppingCart()) {
 
             // Subtract from the number of products.

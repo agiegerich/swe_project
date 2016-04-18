@@ -62,3 +62,4 @@ POST 	/purchase-order/add-requests/:id 				controllers.PurchaseController.addReq
 #Admin
 GET     /admin/users                                    controllers.AdminController.listAllUsers()
 POST    /make-admin/:id                                 controllers.AdminController.makeAdmin(id: Long)
+POST    /grant-role-request/:id                         controllers.AdminController.grantRoleRequest(id: Long)

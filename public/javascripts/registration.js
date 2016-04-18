@@ -11,7 +11,7 @@ $(document).ready(function() {
 
 function showHideManagerAdminIdDependingOnRole() {
     console.log( $('#role').val() );
-    if ( $('#role').val() === 'MANAGER' || $('#role').val() === 'ADMIN' ) {
+    if ( $('#role').val() === 'MANAGER' || $('#role').val() === 'ADMINISTRATOR' ) {
         console.log("Showing admin/manager id.")
         $('#mngrID').show();
     } else {

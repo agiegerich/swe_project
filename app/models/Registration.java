@@ -74,8 +74,7 @@ public class Registration extends Model {
     }
 
     public Registration(
-            String uuid,
-            String firstName, 
+            String firstName,
             String lastName, 
             String email, 
             Date dateOfBirth,
@@ -84,7 +83,6 @@ public class Registration extends Model {
             String password, 
             String repeatPassword, 
             Integer roleConfirmationId){
-        this.uuid = uuid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

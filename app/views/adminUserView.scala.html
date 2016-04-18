@@ -1,9 +1,9 @@
-@(users: List[User])
+@(users: List[User], roleRequests: List[RoleRequest])
 
 @main("Users")( Arrays.asList("adminUserView") )( Arrays.asList("adminUserView") ) {
 
-
     <table>
+        <caption>Users</caption>
         <thead>
             <tr>
                 <th>Email</th>
@@ -36,6 +36,35 @@
             }
         </tbody>
     </table>
+    @if( roleRequests.size > 0 ) {
+        <table id="messageTable">
+            <caption>Messages</caption>
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>Requested Role</th>
+                <th>Message</th>
+                <th>Promote</th>
+            </tr>
+            </thead>
 
+            <tbody>
+            @for( index <- 0 until roleRequests.size ) {
+
+            <tr>
+                <td>@roleRequests(index).getUser().email</td>
+                <td>@roleRequests(index).role</td>
+                <td>@roleRequests(index).getUser().getFirstName() is requesting to be a @roleRequests(index).role</td>
+                <td>
+                    <span class="hidden userId" value="@roleRequests(index).getUser().getId()"></span>
+                    <button type="button" class="grant-role">Grant Role</button>
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    } else {
+        <p>No messages to display.</p>
+    }
 
 }
