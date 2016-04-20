@@ -1,0 +1,15 @@
+@(vendorForm: Form[views.formdata.VendorDataform], user: User)
+
+@import helper._
+
+@main("Add Vendor")(new ArrayList())(new ArrayList()) {
+
+    @form(routes.VendorController.addNewVendor()) {
+
+    	@inputText(vendorForm("name"))
+
+        <input type="submit" value="Add Vendor">
+    }
+
+    <p>@user.firstName</p>
+}

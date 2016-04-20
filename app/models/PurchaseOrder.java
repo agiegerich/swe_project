@@ -36,7 +36,11 @@ public class PurchaseOrder extends Model {
 
     @Required
     @Column(nullable=false)
-    public String supplier;
+    public Vendor supplier;
+
+    @Required
+    @Column(nullable=false)
+    public String supplierName;
 
     @Required
     @Formats.DateTime(pattern = "yyyy-MM-dd")
@@ -123,9 +127,10 @@ public class PurchaseOrder extends Model {
         description: PurchaseOrder object constructor
 *********************************************************************************/
 
-    public PurchaseOrder(User user,String supplier) {
+    public PurchaseOrder(User user,Vendor supplierIn) {
     	this.requester = user;
         this.done = false;
-    	this.supplier = supplier;
+    	this.supplier = supplierIn;
+        this.supplierName = supplierIn.getName();
     }
 }

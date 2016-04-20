@@ -19,7 +19,7 @@
     @for( index <- 0 until purchaseOrders.size) {
                 <tr class="purchase-orders">
                     <td class="purchase-order-id">@purchaseOrders(index).id</td>
-                    <td class="purchase-order-supplier">@purchaseOrders(index).supplier</td>
+                    <td class="purchase-order-supplier">@purchaseOrders(index).supplierName</td>
                     <td class="purchase-order-shipping-date">@purchaseOrders(index).shippingDate</td>
                     <td class="purchase-order-delivery-date">@purchaseOrders(index).deliveryDate</td>
                     <td class="purchase-order-view-requests"><a href="@routes.PurchaseController.viewRequests(purchaseOrders(index).id)">View Requests</a></td>

@@ -385,4 +385,46 @@ public class Application extends Controller {
     public Result resetPasswordEmailSent( String email ) {
         return ok( resetPasswordEmailSent.render( email ) );
     }
+
+    public Result manageAccount() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+
+
+        return ok( accountSettings.render(user.get()));
+    }
+/*
+    public Result changePassword() {
+        String email = session("email");
+        Optional<User> potentialUser = User.findByEmail(email);
+        Optional<Result> invalidResult = checkSession();
+        if (invalidResult.isPresent()) {
+            return invalidResult.get();
+        }
+
+        User user = potentialUser.get();
+
+        SecureRandom random = new SecureRandom();
+        Email emailOut = new Email();
+        emailOut.setSubject("Change Password Request");
+        emailOut.setFrom("SGL Mailer <team10mailer@gmail.com>");
+        emailOut.addTo( "TO <"+ user.email +">" );
+        final String newPassword = new BigInteger(130, random).toString(32);
+        emailOut.setBodyText("Please enter the following as your new password to log in:\n" + newPassword);
+
+        // Send the email.
+        MailerPlugin.send( emailOut );
+        try {
+            final String newPasswordEncrypt = Encryptor.encrypt( R.AES_KEY, R.AES_IV, newPassword);
+            user.password = newPasswordEncrypt;
+            user.save();
+        }  catch (EncryptorException e) {
+           return sendBadRequest(Util.getStackTrace(e));
+        }
+
+        return ok( passwordChangeRequest().render());
+    }*/
 }

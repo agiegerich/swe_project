@@ -63,3 +63,10 @@ POST 	/purchase-order/add-requests/:id 				controllers.PurchaseController.addReq
 GET     /admin/users                                    controllers.AdminController.listAllUsers()
 POST    /make-admin/:id                                 controllers.AdminController.makeAdmin(id: Long)
 POST    /grant-role-request/:id                         controllers.AdminController.grantRoleRequest(id: Long)
+
+#Vendor
+GET 	/add-vendor										controllers.VendorController.index()
+POST 	/add-vendor										controllers.VendorController.addNewVendor()
+
+#Account Settings
+GET 	/account-info									controllers.Application.manageAccount()

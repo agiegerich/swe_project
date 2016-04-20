@@ -1,7 +1,8 @@
 package views.formdata;
+import models.Vendor;
 
 public class PurchaseOrderDataform {
 
-	public String supplier;
+	public Vendor supplier;
 
 }

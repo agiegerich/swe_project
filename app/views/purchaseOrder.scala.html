@@ -1,16 +1,18 @@
-@(orderForm: Form[views.formdata.PurchaseOrderDataform], user: User)
+@(orderForm: Form[views.formdata.PurchaseOrderDataform],vendors: List[models.Vendor], user: User)
 
 @import helper._
 
 @main("Purchase Order")( Arrays.asList("purchaseOrder") )( Arrays.asList("purchaseOrder") ) {
 
 
-    @form(routes.PurchaseController.makeOrder()) {
-
-        @inputText(orderForm("supplier"))
-
-        <input type="submit" value="Add Order">
-
-    }
+<form id="supplierForm" action="@routes.PurchaseController.makeOrder()" method="post">
+    <span class=".Vendor-title">Vendor: </span>
+    <select class="vendor-selector" name="supplier">
+        @for(index <- 0 until vendors.size) {
+            <option value="@vendors(index).name" class="vendor-filter">@vendors(index).name</option>
+        }
+    </select>
+  	<input type="submit" value="Submit">
+</form>
 
 }

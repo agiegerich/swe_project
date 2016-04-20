@@ -24,8 +24,15 @@
         <a href="@routes.PurchaseController.viewCurrentOrders">View Ongoing Orders</a>
         <br>
         <a href="@routes.PurchaseController.orderHistory">View Order History</a>
+        <br>
     }
     @if(user.role == Role.ADMINISTRATOR) {
     	<a href="@routes.RequestController.list" class="logo"><span>See Posted Request</span></a>
+        <br>
+        <a href="@routes.VendorController.addNewVendor" class="logo">Add new Supplier</a>
+        <br>
     }
+    <a>Account Settings</a>
+    <br>
+    <a href="@routes.Application.manageAccount" class="logo">Manage Account Information</a>
 }

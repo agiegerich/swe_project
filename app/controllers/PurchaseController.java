@@ -6,6 +6,7 @@ import models.Request;
 import models.Product;
 import models.User;
 import models.Role;
+import models.Vendor;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -26,6 +27,7 @@ import views.html.orderViewRequests;
 
 import java.util.Optional;
 import java.util.Calendar;
+import java.util.List;
 
 /*********************************
 	Purchase Order Controller
@@ -45,9 +47,9 @@ public class PurchaseController extends Controller {
             session().clear();
             return Application.sendBadRequest("Invalid Session");
         }
+        List<Vendor> vendors = Vendor.findAll();
 
-
-        return ok(purchaseOrder.render(orderForm, user.get()));
+        return ok(purchaseOrder.render(orderForm,vendors,user.get()));
     }
 
 	/*************************************************************************
@@ -71,9 +73,7 @@ public class PurchaseController extends Controller {
 
         PurchaseOrderDataform order = formData.get();
 
-        //NEED TO MAKE ORDER HANDLE SUPPLIER
-
-        PurchaseOrder newPurchaseOrder = new PurchaseOrder(user.get(),order.supplier);
+        PurchaseOrder newPurchaseOrder = new PurchaseOrder(user.get(),order.supplier) ;
 
         newPurchaseOrder.save();
 
@@ -119,7 +119,7 @@ public class PurchaseController extends Controller {
                 request.category,
                 request.quantity,
                 request.size,
-                purchaseOrder.supplier);
+                purchaseOrder.supplier.name);
 
         //newRequest.save();
 
