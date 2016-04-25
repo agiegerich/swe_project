@@ -5,6 +5,8 @@ import models.CartItem;
 import models.Product;
 import models.User;
 import play.Logger;
+import play.libs.mailer.Email;
+import play.libs.mailer.MailerPlugin;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -12,6 +14,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.formdata.ProductDataform;
 import views.html.product;
+import views.html.*;
 
 import java.util.*;
 
@@ -30,6 +33,40 @@ public class ProductController extends Controller {
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
         return ok( product.render(user.get(), Product.findAll(), R.categories, productForm) );
+    }
+
+    public Result history() {
+        String email = session("email");
+        if (email == null) {
+            Application.sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
+        for ( CartItem item : user.get().shoppingHistory() ) {
+            if (item.quantityInCart > item.getProduct().getQuantity() ) {
+                item.quantityInCart = item.getProduct().getQuantity();
+                item.save();
+            }
+        }
+        return ok( shoppingHistory.render(user.get().shoppingHistory(), "0", "") );
+    }
+
+    public Result replace(String emailAdr, Long id) {
+        CartItem item = CartItem.findById(id);
+        Email email = new Email();
+        email.setSubject("Replace Request");
+        email.setFrom("SGL Mailer <team10mailer@gmail.com>");
+        email.addTo( "TO <manage1@uiowa.edu>" );
+
+        email.setBodyText("item.product.name\n item.product.category\n item.quantityInCart\n item.product.quantity\n");
+
+        // Send the email.
+        MailerPlugin.send( email );
+
+        return redirect(routes.ProductController.history());
     }
 
     public Result addProduct(){
@@ -84,13 +121,14 @@ public class ProductController extends Controller {
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
 
-        for (CartItem cartItem : user.get().getShoppingCart()) {
+        for (CartItem cartItem : user.get().inCart()) {
 
             // Subtract from the number of products.
             Product productToPurchase = cartItem.getProduct();
             productToPurchase.setQuantity( productToPurchase.getQuantity() - cartItem.quantityInCart );
             productToPurchase.save();
-            cartItem.delete();
+            cartItem.done = true;
+            cartItem.save();
         }
 
         return redirect(routes.ProductController.list());

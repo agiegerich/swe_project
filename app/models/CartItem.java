@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import play.data.validation.Constraints.Required;
 
 import javax.persistence.*;
 
@@ -19,9 +20,14 @@ public class CartItem extends Model {
     @Column(nullable=false)
     public int quantityInCart;
 
+    @Required
+    @Column(nullable=false)
+    public Boolean done;
+
     public CartItem(Product product, int quantityInCart) {
         this.product = product;
         this.quantityInCart = quantityInCart;
+        this.done = false;
     }
 
     public Product getProduct() {
@@ -33,5 +39,6 @@ public class CartItem extends Model {
     public static CartItem findById(Long id) {
         return find.where().eq("id", id).findUnique();
     }
+
 
 }

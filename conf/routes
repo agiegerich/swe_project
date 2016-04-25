@@ -50,6 +50,10 @@ POST    /submit-cart-form                               controllers.ProductContr
 
 POST    /delete-cart-item/:cartItemId                   controllers.ProductController.deleteCartItem( cartItemId: Long )
 
+POST 	/replace-item/ 									controllers.ProductController.replace( email: String, cartItemId: Long)
+
+GET 	/shoppingHistory 								controllers.ProductController.history()
+
 #PurchaseOrder
 GET		/purchase-order									controllers.PurchaseController.index()
 POST    /purchase-order/make-order						controllers.PurchaseController.makeOrder()
