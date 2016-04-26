@@ -14,10 +14,10 @@
     @helper.form(routes.ProductController.replace(email, items(index).id)){
         
                 <tr class="replace-form">
-                    <td class="item-name">@items(index).product.name</td>
-                    <td class="category">@items(index).product.category</td>
+                    <td class="item-name">@items(index).getProduct().getName()</td>
+                    <td class="category">@items(index).getProduct().getCategory()</td>
                     <td class="quantity">@items(index).quantityInCart</td>
-                    <td class="price">@items(index).product.quantity</td>
+                    <td class="price">@items(index).getProduct().getFormattedPrice()</td>
                     <td><button class="replace-button" value="@items(index).id">Replace</button></td>
                 </tr>
                 }

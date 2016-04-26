@@ -45,12 +45,17 @@ public class ProductController extends Controller {
             session().clear();
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
+
+        /* This isn't what we want to do.
+            If a user buys 6 items and they are the last 6 items in stock
+            then this loop will make the item in history have 0. We want to
+            preserve the number that were purchased in the history.
         for ( CartItem item : user.get().shoppingHistory() ) {
             if (item.quantityInCart > item.getProduct().getQuantity() ) {
                 item.quantityInCart = item.getProduct().getQuantity();
                 item.save();
             }
-        }
+        }*/
         return ok(shoppingHistory.render(user.get().shoppingHistory(), "0", ""));
     }
 
