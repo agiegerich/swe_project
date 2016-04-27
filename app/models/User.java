@@ -57,6 +57,9 @@ public class User extends Model {
 
     @OneToMany(cascade = CascadeType.ALL)
     public List<CartItem> shoppingCart;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<PurchaseHistoryItem> purchaseHistory;
 /*
     @OneToMany(cascade = CascadeType.ALL)
     public List<CartItem> shoppingHistory;
@@ -77,20 +80,9 @@ public class User extends Model {
         return shoppingCart;
     }
 
-    public List<CartItem> inCart(){
-        List<CartItem> shoppingHistory= new ArrayList<CartItem>();
-        for ( CartItem item : this.shoppingCart ) {
-            if(item.done == false) shoppingHistory.add(item);
-        }
-        return shoppingHistory;
-    }
 
-    public List<CartItem> shoppingHistory() {
-        List<CartItem> shoppingHistory= new ArrayList<CartItem>();
-        for ( CartItem item : this.shoppingCart ) {
-            if(item.done == true) shoppingHistory.add(item);
-        }
-        return shoppingHistory;
+    public List<PurchaseHistoryItem> getPurchaseHistory() {
+        return purchaseHistory;
     }
 
     public String getCartDeliveryTime() {

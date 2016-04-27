@@ -3,6 +3,7 @@ package controllers;
 import constants.R;
 import models.CartItem;
 import models.Product;
+import models.PurchaseHistoryItem;
 import models.User;
 import play.Logger;
 import play.libs.mailer.Email;
@@ -56,7 +57,7 @@ public class ProductController extends Controller {
                 item.save();
             }
         }*/
-        return ok(shoppingHistory.render(user.get().shoppingHistory(), "0", ""));
+        return ok(shoppingHistory.render(user.get().getPurchaseHistory(), "0", ""));
     }
 
     public Result replace(String emailAdr, Long id) {
@@ -120,22 +121,45 @@ public class ProductController extends Controller {
         if (email == null) {
             Application.sendBadRequest("You must be logged in to view the cart page.");
         }
-        Optional<User> user = User.findByEmail(email);
-        if ( !user.isPresent() ) {
+        Optional<User> optUser = User.findByEmail(email);
+        if ( !optUser.isPresent() ) {
             session().clear();
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
+        User user = optUser.get();
 
-        for (CartItem cartItem : user.get().inCart()) {
+        long totalCost = 0;
+
+        StringBuilder purchaseReceipt = new StringBuilder();
+        purchaseReceipt.append("Purchase Receipt: ");
+        for (CartItem cartItem : user.getShoppingCart()) {
 
             // Subtract from the number of products.
             Product productToPurchase = cartItem.getProduct();
             productToPurchase.setQuantity( productToPurchase.getQuantity() - cartItem.quantityInCart );
             productToPurchase.save();
-            cartItem.done = true;
-            cartItem.save();
+            purchaseReceipt.append("Item Name: " + productToPurchase.getName() + "\n");
+            purchaseReceipt.append("Quantity : " + cartItem.quantityInCart + "\n");
+            purchaseReceipt.append("Item Cost:" + productToPurchase.getFormattedPrice() + "\n\n");
+            totalCost += cartItem.quantityInCart * productToPurchase.getPrice();
         }
 
+        purchaseReceipt.append("Total Cost: " + Util.formatLongAsDollars( totalCost ));
+
+        // Build an email with the registration link containing the generated UUID.
+        Email emailToSend = new Email();
+        emailToSend.setSubject("Registration Confirmation");
+        emailToSend.setFrom("SGL Mailer <team10mailer@gmail.com>");
+        emailToSend.addTo("TO <" + email + ">");
+        emailToSend.setBodyText(purchaseReceipt.toString());
+        MailerPlugin.send(emailToSend);
+        for (CartItem cartItem : user.getShoppingCart()) {
+            PurchaseHistoryItem purchaseHistoryItem = new PurchaseHistoryItem(cartItem.getProduct(), cartItem.quantityInCart);
+            user.getPurchaseHistory().add(purchaseHistoryItem);
+            user.save();
+
+            cartItem.delete();
+        }
         return redirect(routes.ProductController.list());
     }
 
@@ -157,17 +181,17 @@ public class ProductController extends Controller {
             CartItem newItem = null;
             // Check if the item is already in the cart
             for (CartItem cartItem : user.getShoppingCart()) {
-                if ( cartItem.getProduct().getId() == potentialProduct.get().getId() && !cartItem.done) {
+                if ( cartItem.getProduct().getId() == potentialProduct.get().getId()) {
                     newItem = cartItem;
                 }
             }
 
             if (newItem != null ){
+                Logger.debug("addToCart: Item was not in cart");
                 newItem.quantityInCart += productQuantity;
                 newItem.save();
-
             } else {
-
+                Logger.debug("addToCart: Item was in cart");
                 Product product = potentialProduct.get();
                 CartItem cartItem = new CartItem(product, productQuantity);
                 user.getShoppingCart().add(cartItem);

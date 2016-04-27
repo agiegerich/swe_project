@@ -1,4 +1,4 @@
-@(items: List[models.CartItem], cartTotal: String, email: String)
+@(items: List[models.PurchaseHistoryItem], cartTotal: String, email: String)
 
 @main("ShoppingHistory")( Arrays.asList("shoppingCart") )( Arrays.asList("shoppingCart") ) {
 @if( items.size > 0 ) {
@@ -16,7 +16,7 @@
                 <tr class="replace-form">
                     <td class="item-name">@items(index).getProduct().getName()</td>
                     <td class="category">@items(index).getProduct().getCategory()</td>
-                    <td class="quantity">@items(index).quantityInCart</td>
+                    <td class="quantity">@items(index).quantityPurchased</td>
                     <td class="price">@items(index).getProduct().getFormattedPrice()</td>
                     <td><button class="replace-button" value="@items(index).id">Replace</button></td>
                 </tr>

@@ -20,14 +20,15 @@ public class CartItem extends Model {
     @Column(nullable=false)
     public int quantityInCart;
 
+    /*
     @Required
     @Column(nullable=false)
     public Boolean done;
+    */
 
     public CartItem(Product product, int quantityInCart) {
         this.product = product;
         this.quantityInCart = quantityInCart;
-        this.done = false;
     }
 
     public Product getProduct() {

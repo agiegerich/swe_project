@@ -47,7 +47,7 @@ public class Product extends Model {
     @ManyToOne
     public Vendor preferredVendor;
 
-    @Column(nullable=false)
+    //@Column(nullable=false)
     public Size size;
 
 /*
