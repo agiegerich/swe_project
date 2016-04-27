@@ -36,23 +36,34 @@
         }
     }
 </table>
-    @if(requests.size == 0) {
-        <p>No Requests Found</p>
-    }
 
-    @form(routes.PurchaseController.addRequestToOrder(purchaseOrder.id)) {
-
-        @inputText(requestForm("productName"))
-        @inputText(requestForm("category"))
-        @inputText(requestForm("quantity"))
-        @inputText(requestForm("price"))
-        Size: <select name="size">
-            <option value="SMALL">Small</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="LARGE">Large</option>
-        </select><br><br>
-
-        <input type="submit" value="Add To Order">
-    }
+    <fieldset style="margin:auto;width:35%">
+        <legend>Request</legend>
+        <form action="@routes.PurchaseController.addRequestToOrder(purchaseOrder.id)" method="post">
+            <label class="field">Product Name:</label>
+            <br>
+            <input type="text" name="productName" placeholder="Product Name">
+            <br>
+            <label class="field">Category:</label>
+            <br>
+            <input type="text" name="category" placeholder="Category">
+            <br>
+            <label class="field">Quantity:</label>
+            <br>
+            <input type="text" name="quantity" placeholder="Quantity">
+            <br>
+            <label class="field">Price:</label>
+            <br>
+            <input type="text" name="price" placeholder="Price">
+            <br>
+            <select name="size">
+                <option value="SMALL">Small</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LARGE">Large</option>
+            </select>
+            <br>
+            <input type="submit" value="Add To Order" style="float:right">
+        </form>
+    </fieldset>
 }
 

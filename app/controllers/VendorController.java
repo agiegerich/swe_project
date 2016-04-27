@@ -20,7 +20,7 @@ import views.formdata.AddProductDataform;
 
 import java.util.Optional;
 import java.util.Calendar;
-
+import java.util.List;
 
 import views.html.addVendor;
 import views.formdata.VendorDataform;
@@ -37,8 +37,9 @@ public class VendorController extends Controller{
         if (invalidResult.isPresent()) {
             return invalidResult.get();
         }
+        List<Vendor> existingVendors = Vendor.findAll();
 
-        return ok(addVendor.render(vendorForm,user.get()));
+        return ok(addVendor.render(vendorForm,user.get(),existingVendors));
 	}
 
 	public Result addNewVendor() {
@@ -48,9 +49,13 @@ public class VendorController extends Controller{
         VendorDataform vendor = formData.get();
         
         Vendor newVendor = new Vendor(vendor.name);
-
-        newVendor.save();
-
+        
+        try {
+            newVendor.save();    
+        } catch (Exception e) {
+            return Application.sendBadRequest("That vendor already exists.");    
+        }
+        
 		return redirect(routes.VendorController.index());
 	}
 

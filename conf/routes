@@ -74,3 +74,12 @@ POST 	/add-vendor										controllers.VendorController.addNewVendor()
 
 #Account Settings
 GET 	/account-info									controllers.Application.manageAccount()
+
+GET 	/change-password								controllers.Application.changePassword()
+POST 	/change-password								controllers.Application.changePasswordPost()
+
+GET 	/change-gender									controllers.Application.changeGender()
+POST 	/change-gender									controllers.Application.changeGenderPost()
+
+GET 	/change-name									controllers.Application.changeName()
+POST 	/change-name									controllers.Application.changeNamePost()

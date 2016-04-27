@@ -10,9 +10,7 @@ import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.formdata.Login;
-import views.formdata.RegistrationForm;
-import views.formdata.ResetPassword;
+import views.formdata.*;
 import views.html.*;
 
 import java.util.*;
@@ -373,7 +371,7 @@ public class Application extends Controller {
         MailerPlugin.send( emailOut );
         try {
             final String newPasswordEncrypt = Encryptor.encrypt( R.AES_KEY, R.AES_IV, newPassword);
-            user.password = newPasswordEncrypt;
+            user.setPassword(newPasswordEncrypt);
             user.save();
         }  catch (EncryptorException e) {
            return sendBadRequest(Util.getStackTrace(e));
@@ -396,35 +394,140 @@ public class Application extends Controller {
 
         return ok( accountSettings.render(user.get()));
     }
-/*
+
     public Result changePassword() {
         String email = session("email");
-        Optional<User> potentialUser = User.findByEmail(email);
-        Optional<Result> invalidResult = checkSession();
-        if (invalidResult.isPresent()) {
-            return invalidResult.get();
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
         }
 
-        User user = potentialUser.get();
+        return ok( changePassword.render(user.get(),Form.form(ChangePassword.class)));
+    }
 
-        SecureRandom random = new SecureRandom();
+    public Result changePasswordPost() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> potentialUser = User.findByEmail(email);
+        if ( !potentialUser.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+        User user = potentialUser.get();
+        Form<ChangePassword> formData = Form.form(ChangePassword.class).bindFromRequest();
+
+        ChangePassword changeData = formData.get();
+
+        try { 
+            if (!Encryptor.decrypt( R.AES_KEY, R.AES_IV, user.password).equals( changeData.currentPassword )) {
+                return sendBadRequest("Password is incorrect.");
+            }
+            else if(Encryptor.decrypt( R.AES_KEY, R.AES_IV, user.password).equals(changeData.newPassword)) {
+                return sendBadRequest("New Password must be different from current password.");
+            }
+            else if(!changeData.newPassword.equals(changeData.repeatNewPassword)) {
+                return sendBadRequest("New password and repeat new password do not match.");
+            }
+        } catch (EncryptorException e) {
+            return sendBadRequest(Util.getStackTrace(e));
+        }
+
         Email emailOut = new Email();
         emailOut.setSubject("Change Password Request");
         emailOut.setFrom("SGL Mailer <team10mailer@gmail.com>");
         emailOut.addTo( "TO <"+ user.email +">" );
-        final String newPassword = new BigInteger(130, random).toString(32);
-        emailOut.setBodyText("Please enter the following as your new password to log in:\n" + newPassword);
+        emailOut.setBodyText("Please enter the following as your new password to log in:\n" + changeData.newPassword);
 
         // Send the email.
         MailerPlugin.send( emailOut );
         try {
-            final String newPasswordEncrypt = Encryptor.encrypt( R.AES_KEY, R.AES_IV, newPassword);
+            final String newPasswordEncrypt = Encryptor.encrypt( R.AES_KEY, R.AES_IV, changeData.newPassword);
             user.password = newPasswordEncrypt;
             user.save();
         }  catch (EncryptorException e) {
            return sendBadRequest(Util.getStackTrace(e));
         }
 
-        return ok( passwordChangeRequest().render());
-    }*/
+        return ok( changePasswordSuccess.render(user));
+    }
+
+    public Result changeGender() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        return ok( changeGender.render(user.get(),Form.form(ChangeGender.class)));
+    }
+
+    public Result changeGenderPost() {
+                String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> potentialUser = User.findByEmail(email);
+        if ( !potentialUser.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+        User user = potentialUser.get();
+
+        Form<ChangeGender> formData = Form.form(ChangeGender.class).bindFromRequest();
+
+        user.setGender(formData.get().gender);
+
+        user.save();
+
+        return ok( changeGenderSuccess.render(user));
+    }
+
+    public Result changeName() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        return ok( changeName.render(user.get(),Form.form(ChangeName.class)));
+    }
+
+    public Result changeNamePost() {
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> potentialUser = User.findByEmail(email);
+        if ( !potentialUser.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        User user = potentialUser.get();
+
+        Form<ChangeName> formData = Form.form(ChangeName.class).bindFromRequest();
+        if(formData.get().firstName != "") {
+            user.setFirstName(formData.get().firstName);
+        }
+        if(formData.get().lastName != "") {
+            user.setLastName(formData.get().lastName);
+        }
+        user.save();
+
+        return ok( changeNameSuccess.render(user));
+    }
 }

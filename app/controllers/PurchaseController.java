@@ -7,6 +7,7 @@ import models.Product;
 import models.User;
 import models.Role;
 import models.Vendor;
+import models.Size;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -106,12 +107,12 @@ public class PurchaseController extends Controller {
 
         PurchaseOrder purchaseOrder = PurchaseOrder.findById(id).get();
 
-        Logger.debug("User: " + user.get().email);
+        /*Logger.debug("User: " + user.get().email);
         Logger.debug("Product name: " + request.productName);
         Logger.debug("Category: " + request.category);
         Logger.debug("Quantity: " + request.quantity);
         Logger.debug("Size: " + request.size);
-        Logger.debug("Supplier: " + purchaseOrder.supplier);
+        Logger.debug("Supplier: " + purchaseOrder.supplier);*/
 
         Request newRequest = new Request(
                 user.get(),
@@ -119,7 +120,7 @@ public class PurchaseController extends Controller {
                 request.category,
                 request.quantity,
                 request.size,
-                purchaseOrder.supplier.name);
+                purchaseOrder.supplierName);
 
         //newRequest.save();
 

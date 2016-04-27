@@ -1,8 +1,13 @@
 @(user: User)
 
-@main("Login Success")(new ArrayList())(new ArrayList()) {
+@main("Account Settings")(new ArrayList())(new ArrayList()) {
     <h1>@user.firstName (Role: @user.role)</h1>
     <br>
     <a>Account Settings</a>
-    
+    <br>
+    <a href="@routes.Application.changePassword">Change Password</a>
+    <br>
+    <a href="@routes.Application.changeName">Change Name</a>
+    <br>
+    <a href="@routes.Application.changeGender">Change Gender</a>
 }

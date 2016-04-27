@@ -154,4 +154,18 @@ public class User extends Model {
         return lastName;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 }

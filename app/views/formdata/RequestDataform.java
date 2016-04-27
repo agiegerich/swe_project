@@ -10,7 +10,7 @@ public class RequestDataform {
 
     public String category;
 
-    public Integer quantity;
+    public int quantity;
 
     public Long price;
 

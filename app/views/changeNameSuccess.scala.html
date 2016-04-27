@@ -1,0 +1,6 @@
+@(user: User)
+
+@main("Name Change Success")(new ArrayList())(new ArrayList()) {
+    <p>Name successfully changed to @user.firstName @user.lastName.</p>
+    <a href="@routes.Application.manageAccount">Return to account settings</a>
+}

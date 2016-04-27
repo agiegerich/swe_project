@@ -4,16 +4,38 @@
 
 @main("Registration")(new ArrayList())(new ArrayList()) {
 
-    @form(routes.RequestController.makeRequest()) {
+<h1>@user.firstName</h1>
 
-    	@inputText(requestForm("supplier"))
-        @inputText(requestForm("productName"))
-        @inputText(requestForm("category"))
-        @inputText(requestForm("quantity"))
-        @inputText(requestForm("price"))
-
-        <input type="submit" value="Request">
-    }
-
-    <p>@user.firstName</p>
+    <fieldset style="margin:auto;width:25%">
+    	<legend>Request</legend>
+    	<form action="@routes.RequestController.makeRequest()" method="post">
+            <label class="field">Vendor:</label>
+            <br>
+            <input type="text" name="supplier" placeholder="Supplier Name">
+            <br>
+            <label class="field">Product Name:</label>
+            <br>
+            <input type="text" name="productName" placeholder="Product Name">
+            <br>
+            <label class="field">Category:</label>
+            <br>
+            <input type="text" name="category" placeholder="Category">
+            <br>
+            <label class="field">Quantity:</label>
+            <br>
+            <input type="text" name="quantity" placeholder="Quantity">
+            <br>
+            <label class="field">Price:</label>
+            <br>
+            <input type="text" name="price" placeholder="Price">
+            <br>
+            <select name="size">
+                <option value="SMALL">Small</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LARGE">Large</option>
+            </select>
+            <br>
+            <input type="submit" value="Request">
+    	</form>
+    </fieldset>
 }

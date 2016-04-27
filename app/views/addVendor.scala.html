@@ -1,15 +1,29 @@
-@(vendorForm: Form[views.formdata.VendorDataform], user: User)
+@(vendorForm: Form[views.formdata.VendorDataform], user: User, vendors: List[models.Vendor])
 
 @import helper._
 
 @main("Add Vendor")(new ArrayList())(new ArrayList()) {
+	@if(vendors.size > 0) {
+		<div style="width:25%;margin:auto;height:500px;overflow:auto">
+			<table style="text-align:center">
+			    <tr>
+			        <th>Supplier</th>
+			    </tr>
+			    @for( index <- 0 until vendors.size) {
+			        <tr class="vendor">
+			            <td class="vendor-name">@vendors(index).name</td>
+			        </tr>
+			    }
+			</table>
+		</div>
+	} else {
+		<p>No Vendors Listed</p>
+	}
 
-    @form(routes.VendorController.addNewVendor()) {
-
-    	@inputText(vendorForm("name"))
-
-        <input type="submit" value="Add Vendor">
-    }
-
-    <p>@user.firstName</p>
+	<div style="width:25%;margin:auto;padding-top:10px;text-align:center">
+	    <form id="supplierForm" action="@routes.VendorController.addNewVendor()" method="post">
+	    	<input type="text" name="name" value="" placeholder="Vendor">
+	        <input type="submit" value="Add Vendor">
+	    </form>
+    </div>
 }

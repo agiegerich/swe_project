@@ -1,0 +1,22 @@
+@(user: User,form: Form[views.formdata.ChangeGender])
+
+@main("Change Gender")(new ArrayList())(new ArrayList()) {
+	@helper.form(routes.Application.changeGenderPost()) {
+	   <h1>Gender Change</h1>
+	   @if(form.hasGlobalErrors) {
+	    <p class="error">
+	        @form.globalError.message
+	    </p>
+		}
+		<fieldset>
+			<legend>Gender Change</legend>
+				<label class="field">Gender:<label/>
+				<select name="gender" required>
+	                <option value="MALE">Male</option>
+					<option value="FEMALE">Female</option>
+				</select>
+				<br />
+			<p><button type="submit">Submit</button></p>
+		</fieldset>
+	}
+}
