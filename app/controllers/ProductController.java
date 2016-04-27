@@ -133,11 +133,14 @@ public class ProductController extends Controller {
         StringBuilder purchaseReceipt = new StringBuilder();
         purchaseReceipt.append("Purchase Receipt: \n\n");
         for (CartItem cartItem : user.getShoppingCart()) {
-
             // Subtract from the number of products.
             Product productToPurchase = cartItem.getProduct();
-            productToPurchase.setQuantity( productToPurchase.getQuantity() - cartItem.quantityInCart );
-            productToPurchase.save();
+
+            buyProduct(user, productToPurchase, cartItem.quantityInCart);
+            // Delete from the users cart
+            cartItem.delete();
+
+            // Build the receipt email
             purchaseReceipt.append("Item Name: " + productToPurchase.getName() + "\n");
             purchaseReceipt.append("Quantity : " + cartItem.quantityInCart + "\n");
             purchaseReceipt.append("Item Cost:" + productToPurchase.getFormattedPrice() + "\n\n");
@@ -153,14 +156,17 @@ public class ProductController extends Controller {
         emailToSend.addTo("TO <" + email + ">");
         emailToSend.setBodyText(purchaseReceipt.toString());
         MailerPlugin.send(emailToSend);
-        for (CartItem cartItem : user.getShoppingCart()) {
-            PurchaseHistoryItem purchaseHistoryItem = new PurchaseHistoryItem(cartItem.getProduct(), cartItem.quantityInCart);
-            user.getPurchaseHistory().add(purchaseHistoryItem);
-            user.save();
-
-            cartItem.delete();
-        }
         return redirect(routes.ProductController.list());
+    }
+
+    public void buyProduct(User user, Product productToPurchase, int quantity) {
+        productToPurchase.setQuantity( productToPurchase.getQuantity() - quantity );
+        productToPurchase.save();
+
+        // Add to the users purchase history.
+        PurchaseHistoryItem purchaseHistoryItem = new PurchaseHistoryItem(productToPurchase, quantity);
+        user.getPurchaseHistory().add(purchaseHistoryItem);
+        user.save();
     }
 
     public Result addToCart(Long productId, int productQuantity) {
