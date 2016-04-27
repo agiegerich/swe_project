@@ -131,7 +131,7 @@ public class ProductController extends Controller {
         long totalCost = 0;
 
         StringBuilder purchaseReceipt = new StringBuilder();
-        purchaseReceipt.append("Purchase Receipt: ");
+        purchaseReceipt.append("Purchase Receipt: \n\n");
         for (CartItem cartItem : user.getShoppingCart()) {
 
             // Subtract from the number of products.
@@ -148,7 +148,7 @@ public class ProductController extends Controller {
 
         // Build an email with the registration link containing the generated UUID.
         Email emailToSend = new Email();
-        emailToSend.setSubject("Registration Confirmation");
+        emailToSend.setSubject("Purchase Receipt");
         emailToSend.setFrom("SGL Mailer <team10mailer@gmail.com>");
         emailToSend.addTo("TO <" + email + ">");
         emailToSend.setBodyText(purchaseReceipt.toString());
