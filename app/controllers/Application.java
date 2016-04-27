@@ -264,14 +264,12 @@ public class Application extends Controller {
                 registrationForm.roleConfirmationId
         );
 
-        try {
-            Logger.debug("Password before encryption: " + registration.password );
-            registration.password = Encryptor.encrypt( R.AES_KEY, R.AES_IV, registration.password);
-            Logger.debug("Password after encryption : " + registration.password );
-            Logger.debug("Password after decryption : " + Encryptor.decrypt( R.AES_KEY, R.AES_IV, registration.password ));
-        } catch (EncryptorException e) {
-            return sendBadRequest(Util.getStackTrace(e));
+        if (!registration.password.equals(registration.repeatPassword)) {
+            Logger.debug("Pass: " + registration.password);
+            Logger.debug("Repeat Pass: " + registration.repeatPassword);
+            return sendBadRequest( "The passwords you entered do not match." );
         }
+
 
         if ( registration.role != Role.USER ) {
             try {
@@ -281,7 +279,14 @@ public class Application extends Controller {
             }
         }
 
-        
+        try {
+            Logger.debug("Password before encryption: " + registration.password );
+            registration.password = Encryptor.encrypt( R.AES_KEY, R.AES_IV, registration.password);
+            Logger.debug("Password after encryption : " + registration.password );
+            Logger.debug("Password after decryption : " + Encryptor.decrypt( R.AES_KEY, R.AES_IV, registration.password ));
+        } catch (EncryptorException e) {
+            return sendBadRequest(Util.getStackTrace(e));
+        }
         // Add a UUID to the Registration so that we can verify the registration via email.
         registration.uuid = UUID.randomUUID().toString();
 
@@ -401,7 +406,7 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
         Optional<User> user = User.findByEmail(email);
-        if ( !user.isPresent() ) {
+        if ( !user.isPresent()) {
             session().clear();
             return Application.sendBadRequest("Invalid Session");
         }
