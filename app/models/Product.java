@@ -106,6 +106,10 @@ public class Product extends Model {
         return Util.formatLongAsDollars( this.price );
     }
 
+    public Vendor getPreferredVendor() {
+        return preferredVendor;
+    }
+
     public Product(String productName, String category, Integer quantity, Long price, Size size){
         this.name = productName;
         this.category = category;

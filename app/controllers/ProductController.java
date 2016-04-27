@@ -32,7 +32,7 @@ public class ProductController extends Controller {
             session().clear();
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
-        return ok( product.render(user.get(), Product.findAll(), R.categories, productForm) );
+        return ok(product.render(user.get(), Product.findAll(), R.categories, productForm));
     }
 
     public Result history() {
@@ -45,13 +45,18 @@ public class ProductController extends Controller {
             session().clear();
             return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
         }
+
+        /* This isn't what we want to do.
+            If a user buys 6 items and they are the last 6 items in stock
+            then this loop will make the item in history have 0. We want to
+            preserve the number that were purchased in the history.
         for ( CartItem item : user.get().shoppingHistory() ) {
             if (item.quantityInCart > item.getProduct().getQuantity() ) {
                 item.quantityInCart = item.getProduct().getQuantity();
                 item.save();
             }
-        }
-        return ok( shoppingHistory.render(user.get().shoppingHistory(), "0", "") );
+        }*/
+        return ok(shoppingHistory.render(user.get().shoppingHistory(), "0", ""));
     }
 
     public Result replace(String emailAdr, Long id) {
@@ -64,7 +69,7 @@ public class ProductController extends Controller {
         email.setBodyText("item.product.name\n item.product.category\n item.quantityInCart\n item.product.quantity\n");
 
         // Send the email.
-        MailerPlugin.send( email );
+        MailerPlugin.send(email);
 
         return redirect(routes.ProductController.history());
     }
@@ -151,10 +156,23 @@ public class ProductController extends Controller {
             User user = optUser.get();
             CartItem newItem = null;
             // Check if the item is already in the cart
-            Product product = potentialProduct.get();
-            CartItem cartItem = new CartItem(product, productQuantity);
-            user.getShoppingCart().add(cartItem);
-            user.save();
+            for (CartItem cartItem : user.getShoppingCart()) {
+                if ( cartItem.getProduct().getId() == potentialProduct.get().getId() && !cartItem.done) {
+                    newItem = cartItem;
+                }
+            }
+
+            if (newItem != null ){
+                newItem.quantityInCart += productQuantity;
+                newItem.save();
+
+            } else {
+
+                Product product = potentialProduct.get();
+                CartItem cartItem = new CartItem(product, productQuantity);
+                user.getShoppingCart().add(cartItem);
+                user.save();
+            }
         }
         return ok(Json.toJson(jsonObject));
     }
