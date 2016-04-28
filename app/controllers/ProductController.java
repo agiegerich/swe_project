@@ -10,6 +10,7 @@ import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.data.DynamicForm;
 import play.data.Form;
+import views.formdata.ReplaceQuantity;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -57,22 +58,38 @@ public class ProductController extends Controller {
                 item.save();
             }
         }*/
-        return ok(shoppingHistory.render(user.get().getPurchaseHistory(), "0", ""));
+        return ok(shoppingHistory.render(user.get().getPurchaseHistory()));
     }
 
-    public Result replace(String emailAdr, Long id) {
-        CartItem item = CartItem.findById(id);
-        Email email = new Email();
-        email.setSubject("Replace Request");
-        email.setFrom("SGL Mailer <team10mailer@gmail.com>");
-        email.addTo( "TO <manage1@uiowa.edu>" );
+    public Result replace(Long id) {
+        String email = session("email");
+        if (email == null) {
+            return Application.sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
 
-        email.setBodyText("item.product.name\n item.product.category\n item.quantityInCart\n item.product.quantity\n");
 
-        // Send the email.
-        MailerPlugin.send(email);
+        Product product = PurchaseHistoryItem.findById(id).getProduct();
 
-        return redirect(routes.ProductController.history());
+        if (product.getQuantity() == 0) {
+
+            List<Product> alternates = product.getAlternates();
+
+            return ok(replaceItem.render(alternates, PurchaseHistoryItem.findById(id).quantityPurchased, Form.form(ReplaceQuantity.class)));
+
+        } else {
+
+           List<Product> alternates = new ArrayList<Product>();
+
+            alternates.add(product);
+
+            return ok(replaceItem.render(alternates, PurchaseHistoryItem.findById(id).quantityPurchased, Form.form(ReplaceQuantity.class)));
+
+        }
     }
 
     public Result addProduct(){
@@ -88,7 +105,7 @@ public class ProductController extends Controller {
         return redirect(routes.ProductController.list());
 
     }
-
+/*
     public Result buyProduct(Long productId, int productQuantity) {
         Optional<Product> potentialProduct = Product.findById(productId);
 
@@ -105,7 +122,7 @@ public class ProductController extends Controller {
         }
         return ok(Json.toJson(jsonObject));
     }
-
+*/
     public class IdQuantity {
         IdQuantity(Long id, int quantity) {
             this.id = id;
@@ -167,6 +184,47 @@ public class ProductController extends Controller {
         PurchaseHistoryItem purchaseHistoryItem = new PurchaseHistoryItem(productToPurchase, quantity);
         user.getPurchaseHistory().add(purchaseHistoryItem);
         user.save();
+    }
+
+    public Result replaceProduct(Long productId, Integer quantity) {
+
+        String email = session("email");
+        if (email == null) {
+            Application.sendBadRequest("You must be logged in to view the cart page.");
+        }
+        Optional<User> optUser = User.findByEmail(email);
+        if ( !optUser.isPresent() ) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session: User with email " + email + "does not exist.");
+        }
+
+        Form<ReplaceQuantity> formData = Form.form(ReplaceQuantity.class).bindFromRequest();
+
+        ReplaceQuantity quantityForm = formData.get();
+
+        Product product = Product.findById(productId).get();
+
+        if ( quantityForm.replaceQuantity > quantity) {
+            return Application.sendBadRequest("Input wrong quantity");
+        }
+
+        User user = User.findByEmail(email).get();
+
+        Product productToPurchase = Product.findById(productId).get();
+
+        if ( productToPurchase.getQuantity() - quantityForm.replaceQuantity < 0) {
+            return Application.sendBadRequest("Input wrong quantity");
+        }
+
+        productToPurchase.setQuantity( productToPurchase.getQuantity() - quantityForm.replaceQuantity );
+        productToPurchase.save();
+
+        // Add to the users purchase history.
+        PurchaseHistoryItem purchaseHistoryItem = new PurchaseHistoryItem(productToPurchase, quantityForm.replaceQuantity);
+        user.getPurchaseHistory().add(purchaseHistoryItem);
+        user.save();
+
+        return redirect(routes.ProductController.history());
     }
 
     public Result addToCart(Long productId, int productQuantity) {

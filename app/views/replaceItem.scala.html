@@ -1,0 +1,40 @@
+@(items: List[models.Product], quantity: Integer, form: Form[views.formdata.ReplaceQuantity])
+
+@main("ReplaceItem")( Arrays.asList("replaceItem") )( Arrays.asList("replaceItem") ) {
+@if( items.size > 0 ) {
+<table>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Replace Quantity</th>
+                <th>Confirm</th>
+            </tr>
+@for( index <- 0 until items.size) {
+    @helper.form(routes.ProductController.replaceProduct(items(index).id, quantity)){
+        
+                <tr class="replace-form">
+                    <td class="item-name">@items(index).getName()</td>
+                    <td class="category">@items(index).getCategory()</td>
+                    <td class="quantity">@quantity</td>
+                    <td class="price">@items(index).getFormattedPrice()</td>
+                    <td><input type="replaceQuantity" name="replaceQuantity" value="@form("replaceQuantity").value" placeholder=""></td>
+                    <td><button class="replace-button" >Confirm</button></td>
+                </tr>
+                }
+                }
+</table>
+} else {
+    <p>Cart is empty.</p>
+}
+
+<div id="confirmation-dialog">
+    
+    <div><input type="number" id="confirmation-dollars"><span>.</span>
+    <input type="number" id="confirmation-cents" max="99"><span>$</span></div>
+    <div id="confirmation-dialog-txt"></div>
+    <div id="confirmation-dialog-error"></div>
+</div>
+
+}

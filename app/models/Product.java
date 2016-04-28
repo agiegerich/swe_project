@@ -102,6 +102,10 @@ public class Product extends Model {
         return this.price;
     }
 
+    public List<Product> getAlternates() {
+        return this.alternates;
+    }
+
     public String getFormattedPrice() {
         return Util.formatLongAsDollars( this.price );
     }

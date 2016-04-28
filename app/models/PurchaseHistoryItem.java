@@ -19,6 +19,14 @@ public class PurchaseHistoryItem extends Model {
     @ManyToOne
     public Product product;
 
+    public static Model.Finder<String, PurchaseHistoryItem> find = new Model.Finder<>(PurchaseHistoryItem.class);
+
+    public static PurchaseHistoryItem findById(Long id) {
+        PurchaseHistoryItem item = PurchaseHistoryItem.find.where().eq("id", id).findUnique();
+        return item;
+
+    }
+
     public PurchaseHistoryItem(Product product, int quantityPurchased) {
         this.product=product;
         this.quantityPurchased=quantityPurchased;

@@ -44,13 +44,13 @@ GET     /shopping-cart                                  controllers.Application.
 GET		/product							            controllers.ProductController.list()
 POST 	/product 							            controllers.ProductController.addProduct()
 
-POST    /buy-product/:productId/:productQuantity        controllers.ProductController.buyProduct( productId: Long, productQuantity: Integer )
+POST    /buy-product/:productId/ 				        controllers.ProductController.replaceProduct( productId: Long, quantity: Integer )
 POST    /add-to-cart/:productId/:productQuantity        controllers.ProductController.addToCart( productId: Long, productQuantity: Integer )
 POST    /submit-cart-form                               controllers.ProductController.checkoutCart()
 
 POST    /delete-cart-item/:cartItemId                   controllers.ProductController.deleteCartItem( cartItemId: Long )
 
-POST 	/replace-item/ 									controllers.ProductController.replace( email: String, cartItemId: Long)
+POST 	/replace-item/ 									controllers.ProductController.replace( cartItemId: Long )
 
 GET 	/shoppingHistory 								controllers.ProductController.history()
 
