@@ -54,6 +54,10 @@ POST 	/replace-item/ 									controllers.ProductController.replace( cartItemId:
 
 GET 	/shoppingHistory 								controllers.ProductController.history()
 
+GET 	/manageProduct 									controllers.ProductController.manageProduct()
+
+GET 	/manageAlternates/:productId			 		controllers.ProductController.manageAlternates( productId: Long)
+
 #PurchaseOrder
 GET		/purchase-order									controllers.PurchaseController.index()
 POST    /purchase-order/make-order						controllers.PurchaseController.makeOrder()

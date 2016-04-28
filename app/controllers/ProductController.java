@@ -5,6 +5,7 @@ import models.CartItem;
 import models.Product;
 import models.PurchaseHistoryItem;
 import models.User;
+import models.Role;
 import play.Logger;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
@@ -272,4 +273,43 @@ public class ProductController extends Controller {
         return ok( Json.toJson(new HashMap<String, String>()));
     }
 
+    public Result manageProduct() {
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+        if( user.get().role == Role.USER) {
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        return ok(productManage.render(Product.findAll(), R.categories));
+    }
+
+
+
+    public Result manageAlternates(Long productId) {
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+        if( user.get().role == Role.USER) {
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        Product product = Product.findById(productId).get();
+
+        return ok(alternatesManage.render(Product.findAll(), product.getAlternates()));
+    }
 }

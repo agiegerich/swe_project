@@ -1,0 +1,42 @@
+@(products: List[models.Product], categories: List[String])
+
+@import helper._
+
+@main("Products")( Arrays.asList("product") )( Arrays.asList("product") ) {
+
+
+<div class="category-selection-div">
+    <span class=".category-title">Category: </span>
+    <select class="category-selector">
+        @for(index <- 0 until categories.size) {
+            <option value="@categories(index)" class="category-filter">@categories(index)</option>
+        }
+    </select>
+</div>
+
+<div class="product-search-div">
+    <input type="text" class="product-search-bar">
+    <button class="search-button">Search</button>
+</div>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Management</th>
+    </tr>
+    @for( index <- 0 until products.size) {
+        @helper.form(routes.ProductController.manageAlternates(products(index).id)){
+            <tr class="product-listing category-@products(index).category">
+                <td class="product-name">@products(index).name</td>
+                <td class="product-category">@products(index).category</td>
+                <td class="product-price" value="@products(index).price">@products(index).getFormattedPrice()</td>
+                <td><button class="buy-button" value="@products(index).id">Click</button></td>
+            </tr>
+            }
+    }
+</table>
+
+
+}

@@ -9,6 +9,8 @@
     <a href="@routes.ProductController.history" class="logo"><span>View History</span></a>
     <br>
     @if(user.role == Role.MANAGER || user.role == Role.ADMINISTRATOR) {
+        <a href="@routes.ProductController.manageProduct">Product Management</a>
+        <br>
         <a>Request Management</a>
         <br>
     }
