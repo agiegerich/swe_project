@@ -1,8 +1,42 @@
-@(products: List[models.Product], alternates: List[models.Product])
+@(product: models.Product, products: List[models.Product], alternates: List[models.Product])
 
 @import helper._
 
-@main("Products")( Arrays.asList("product") )( Arrays.asList("product") ) {
+@main("Alternates Management")( Arrays.asList("alternates") )( Arrays.asList("alternates") ) {
 
-    <p> Coming Soon!</p>
+<span>Manage Item: @product.name   ID: @product.id</span>
+
+
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Action</th>
+    </tr>
+    @for( index <- 0 until products.size) {
+        <tr class="alternates-listing category-@products(index).category">
+            <td class="productId">@products(index).id</td>
+            <td class="productName">@products(index).name</td>
+            <td class="productCategory">@products(index).category</td>
+            <td class="productPrice">@products(index).getFormattedPrice()</td>
+            @helper.form(routes.ProductController.addAlternates(product.id, products(index).id)){
+            <td><input type="submit" value="Add"></td>
+            }
+        </tr>
+    }
+
+    @for( index <- 0 until alternates.size) {
+        <tr class="alternates-listing category-@alternates(index).category">
+            <td class="productId">@alternates(index).id</td>
+            <td class="productName">@alternates(index).name</td>
+            <td class="productCategory">@alternates(index).category</td>
+            <td class="productPrice">@alternates(index).getFormattedPrice()</td>
+            @helper.form(routes.ProductController.deleteAlternates(product.id, alternates(index).id)){
+            <td><input type="submit" value="Delete"></td>
+            }
+        </tr>
+    }
+    
 }

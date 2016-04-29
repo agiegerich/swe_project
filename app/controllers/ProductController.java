@@ -310,6 +310,78 @@ public class ProductController extends Controller {
 
         Product product = Product.findById(productId).get();
 
-        return ok(alternatesManage.render(Product.findAll(), product.getAlternates()));
+        List<Product> products = Product.findAll();
+
+        products.remove(product);
+
+        List<Product> alternates = product.getAlternates();
+
+        for (Product item : product.getAlternates()){
+            if( alternates.contains(item) ) {
+                products.remove(item);
+            }
+        }
+
+        return ok(alternatesManage.render(product, products, alternates));
+    }
+
+    public Result addAlternates(Long productId, Long alternatesProductId) {
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+        if( user.get().role == Role.USER) {
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        Product product = Product.findById(productId).get();
+
+        Product alternate = Product.findById(alternatesProductId).get();
+
+        product.getAlternates().add(alternate);
+
+        product.save();
+
+        alternate.getAlternates().add(product);
+
+        alternate.save();
+
+        return redirect(routes.ProductController.manageAlternates(productId));
+    }
+
+    public Result deleteAlternates(Long productId, Long alternatesProductId) {
+
+        String email = session("email");
+        if (email == null) {
+            return redirect(routes.Application.index());
+        }
+        Optional<User> user = User.findByEmail(email);
+        if ( !user.isPresent()) {
+            session().clear();
+            return Application.sendBadRequest("Invalid Session");
+        }
+        if( user.get().role == Role.USER) {
+            return Application.sendBadRequest("Invalid Session");
+        }
+
+        Product product = Product.findById(productId).get();
+
+        Product alternate = Product.findById(alternatesProductId).get();
+
+        product.getAlternates().remove(alternate);
+
+        product.save();
+
+        alternate.getAlternates().remove(product);
+
+        alternate.save();
+
+        return redirect(routes.ProductController.manageAlternates(productId));
     }
 }

@@ -58,6 +58,10 @@ GET 	/manageProduct 									controllers.ProductController.manageProduct()
 
 GET 	/manageAlternates/:productId			 		controllers.ProductController.manageAlternates( productId: Long)
 
+POST 	/addAlternates/:productId 						controllers.ProductController.addAlternates( productId: Long, alternatesProductId: Long)
+
+POST 	/deleteAlternates/:productId 					controllers.ProductController.deleteAlternates( productId: Long, alternatesProductId: Long)
+
 #PurchaseOrder
 GET		/purchase-order									controllers.PurchaseController.index()
 POST    /purchase-order/make-order						controllers.PurchaseController.makeOrder()
