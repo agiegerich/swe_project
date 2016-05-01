@@ -2,13 +2,13 @@
 
 @main("Login")(new ArrayList())(new ArrayList()) {
   @helper.form(routes.Application.postLogin) {
-     <h1>Welcome!</h1>
+     <h1 id="login-header">Welcome!</h1>
      @if(form.hasGlobalErrors) {
       <p class="error">
           @form.globalError.message
       </p>
   	}
-      <fieldset style="margin:auto">
+      <fieldset id="login-fieldset" style="margin:auto">
       <legend>Login</legend>
          <p>
              <input type="email" name="email" placeholder="Email" value="@form("email").value">

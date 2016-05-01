@@ -22,7 +22,7 @@
         }
     </head>
     <body>
-        <div style = "top:0;left:0;position:fixed;width:100%;height:60px;background-color:#EEE1B1">
+        <div id="main-navbar" style="">
             @if( session.get("email") == null ) {
                 <a href="@routes.Application.registration" style="float:right;padding:20px">Registration</a>
                 <a href="@routes.Application.login" style="float:right;padding:20px">Login</a>

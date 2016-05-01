@@ -2,8 +2,7 @@
 
 @main("Login Success")(new ArrayList())(new ArrayList()) {
     <h1>Welcome @user.firstName (Role: @user.role)</h1>
-    <a>Product</a>
-    <br>
+    <h2>Product</h2>
     <a href="@routes.ProductController.list" class="logo"><span>Search Product</span></a>
     <br>
     <a href="@routes.ProductController.history" class="logo"><span>View History</span></a>
@@ -11,7 +10,7 @@
     @if(user.role == Role.MANAGER || user.role == Role.ADMINISTRATOR) {
         <a href="@routes.ProductController.manageProduct">Product Management</a>
         <br>
-        <a>Request Management</a>
+        <h2>Request Management</h2>
         <br>
     }
     @if(user.role == Role.MANAGER) {
@@ -21,8 +20,7 @@
         <br>
         <a href="@routes.RequestController.requestHistory" class="logo"><span>Request History</span></a>
         <br>
-        <a>Order Management</a>
-        <br>
+        <h2>Order Management</h2>
         <a href="@routes.PurchaseController.index" class="logo"><span>Make an Order</span></a>
         <br>
         <a href="@routes.PurchaseController.viewCurrentOrders">View Ongoing Orders</a>
@@ -36,7 +34,6 @@
         <a href="@routes.VendorController.addNewVendor" class="logo">Add new Supplier</a>
         <br>
     }
-    <a>Account Settings</a>
-    <br>
+    <h2>Account Settings</h2>
     <a href="@routes.Application.manageAccount" class="logo">Manage Account Information</a>
 }
